@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float maxHp;
+    public float currentHp;
+    public float damage;
+
+    public float lastAttackTime;
+    public float attackInterval;
+
+    protected virtual void Start()
     {
-        
+        currentHp = maxHp;
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void TakeDamage(float damage)
     {
-        
+        currentHp -= damage;
     }
 }

@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     public float currentHp;
     public float damage;
     public float moveSpeed;
+    public float rotateSpeed;
     public float lastAttackTime;
     public float attackInterval;
 

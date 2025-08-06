@@ -17,6 +17,8 @@ public class CharacterControllerMove : MonoBehaviour
 
     private float gravityVelocity;
 
+    private bool canMove = true;
+
 
     void Awake()
     {
@@ -25,6 +27,8 @@ public class CharacterControllerMove : MonoBehaviour
     }
     void Update()
     {
+        if (!canMove) return;
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -81,5 +85,9 @@ public class CharacterControllerMove : MonoBehaviour
         {
             anim.SetTrigger("RollDodge");
         }
+    }
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
     }
 }

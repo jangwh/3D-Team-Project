@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static WeaponSwapAndAttack;
 
 public class CharacterControllerMove : MonoBehaviour
 {
     CharacterController charCtrl;
     Animator anim;
+    public WeaponData weaponData;
     public float moveSpeed; //걸을때 최고속도 = 1
     public float sprintSpeed; //뛸때 최고속도 = 3
+    public bool isBattle;
 
     private float currentSpeed; //걷던 뛰던 현재 움직여야 하는 속도
     private float rawSpeed; //걷고 있으면 1, 뛰고 있으면 2가 되는 입력속도
 
     private float gravityVelocity;
+
 
     void Awake()
     {
@@ -50,19 +54,32 @@ public class CharacterControllerMove : MonoBehaviour
         moveDir.y = gravityVelocity;
 
         charCtrl.Move(moveDir * Time.deltaTime);
-        //if (anim)
-        //{
-        //    anim.SetFloat("XDir", x);
-        //    anim.SetFloat("YDir", z);
-        //    anim.SetFloat("Speed", rawSpeed); //걸을 때는 0~1, 뛸 때는 1~2
-        //}
-        //if(Input.GetKeyDown(KeyCode.R))
-        //{
-        //    anim.SetTrigger("Reload");
-        //}
-        //if (Input.GetKeyDown(KeyCode.G))
-        //{
-        //    anim.SetTrigger("Grenade");
-        //}
+
+        if(weaponData.weaponName == "Fist")
+        {
+            isBattle = false;
+        }
+        else
+        {
+            isBattle = true;
+        }
+
+        if (!isBattle)
+        {
+            anim.SetFloat("XDir", x);
+            anim.SetFloat("YDir", z);
+            anim.SetFloat("Speed", rawSpeed); //걸을 때는 0~1, 뛸 때는 1~2
+        }
+        else
+        {
+            anim.SetBool("isBattle", isBattle);
+            anim.SetFloat("XDir", x);
+            anim.SetFloat("YDir", z);
+            anim.SetFloat("Speed", rawSpeed);
+        }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetTrigger("RollDodge");
+        }
     }
 }

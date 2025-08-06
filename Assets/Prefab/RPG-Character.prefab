@@ -187,13 +187,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - weaponName: Fist
-    runtimeAnimatorController: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
   - weaponName: Sword
-    runtimeAnimatorController: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
-  characterControllerMove: {fileID: 3092123705648822597}
-  maxComboCount: 3
-  attackDelay: 1
+    controller: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
+  attackCount: 0
+  maxCount: 3
+  exitTime: 1
+  overheat: 1
+  max_combo: 0
 --- !u!114 &3092123705648822597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,9 +206,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 386ad697905dab548b520272e9b9f420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData:
-    weaponName: 
-    runtimeAnimatorController: {fileID: 0}
   moveSpeed: 1
   sprintSpeed: 3
   isBattle: 0

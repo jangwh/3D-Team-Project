@@ -158,7 +158,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 2100807675}
-  m_Follow: {fileID: 1393166443}
+  m_Follow: {fileID: 1601114162}
   m_Lens:
     FieldOfView: 60.000004
     OrthographicSize: 5
@@ -711,11 +711,6 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 1
---- !u!4 &1393166443 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2041310120345333206, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
-  m_PrefabInstance: {fileID: 147943209934830020}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1503518483
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,6 +918,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!4 &1601114162 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2041310120345333206, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+  m_PrefabInstance: {fileID: 147943209934830020}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1974068150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,6 +1064,17 @@ MonoBehaviour:
   CameraRadius: 0.2
   DampingIntoCollision: 0
   DampingFromCollision: 2
+--- !u!114 &1986327964 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3092123705648822597, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+  m_PrefabInstance: {fileID: 147943209934830020}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386ad697905dab548b520272e9b9f420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2027350523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,8 +1168,28 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
-      propertyPath: attackDelay
-      value: 0.5
+      propertyPath: weapons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: characterControllerMove
+      value: 
+      objectReference: {fileID: 1986327964}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: weapons.Array.data[0].controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: weapons.Array.data[0].weaponName
+      value: Fist
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: weapons.Array.data[1].controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: weapons.Array.data[1].weaponName
+      value: Sword
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

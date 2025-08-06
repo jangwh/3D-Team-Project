@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class WeaponSwapAndAttack : MonoBehaviour
@@ -8,22 +9,23 @@ public class WeaponSwapAndAttack : MonoBehaviour
     public class WeaponData
     {
         public string weaponName;
-        public RuntimeAnimatorController controller; // Base or Override 가능
+        public AnimatorController animatorController;
     }
 
     public List<WeaponData> weapons = new List<WeaponData>();
+
+    [Header("References")]
+    public CharacterControllerMove characterControllerMove; // 이동 제어 스크립트 참조
     private Animator anim;
-    private AnimatorOverrideController workingOverride;
+
+    [Header("Combo Settings")]
+    public int maxComboCount = 3;
+    public float attackDelay = 0.5f;
 
     private int currentWeaponIndex = 0;
+    private int currentComboIndex = 0;
 
-    public int attackCount = 0;
-    public int maxCount = 3;
-    public float exitTime;
-
-    public float overheat;
-
-    public bool max_combo = false;
+    private Coroutine attackCoroutine;
 
     void Awake()
     {
@@ -35,77 +37,62 @@ public class WeaponSwapAndAttack : MonoBehaviour
             return;
         }
 
-        SetWeaponController(currentWeaponIndex);
+        SetWeapon(currentWeaponIndex);
     }
 
     void Update()
     {
-        // 무기 교체 (Tab)
+        HandleWeaponSwap();
+        HandleAttackInput();
+    }
+
+    void HandleWeaponSwap()
+    {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Count;
-            SetWeaponController(currentWeaponIndex);
+            SetWeapon(currentWeaponIndex);
         }
+    }
 
-        if (Input.GetMouseButtonDown(0) && attackCount < maxCount && !max_combo)
+    void HandleAttackInput()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-            attackCount++;
-            if (attackCount == maxCount)
+            if (attackCoroutine == null)
             {
-                max_combo = true;
+                currentComboIndex = 1;
+                attackCoroutine = StartCoroutine(PerformCombo());
             }
-
-            if (attackCount == 1 && !max_combo)
+            else if (currentComboIndex <= maxComboCount)
             {
-                StartCoroutine(Timer());
+                currentComboIndex++;
             }
         }
     }
 
-    void SetWeaponController(int index)
+    void SetWeapon(int index)
     {
         var weapon = weapons[index];
-
-        // 항상 새 오버라이드 컨트롤러 생성 (base 또는 override 모두 지원)
-        workingOverride = new AnimatorOverrideController(weapon.controller);
-        anim.runtimeAnimatorController = workingOverride;
+        anim.runtimeAnimatorController = weapon.animatorController;
     }
-    private IEnumerator Timer()
+
+    IEnumerator PerformCombo()
     {
-        int loopCount = 0;
+        characterControllerMove?.SetCanMove(false); // 이동 제한 시작
 
-        while (attackCount > 0) // 0보다낮으면 종료
+        while (currentComboIndex > 0)
         {
-            loopCount++;
-            if (loopCount == 4)
-            {
-                Debug.Log("오버플로우 감지");
-
-                // 복구작업 및 코루틴 탈출
-                loopCount = 0;
-                attackCount = 0;
-                anim.SetInteger("attackCount", loopCount);
-                break;
-            }
             anim.SetTrigger("meleeAttack");
-            anim.SetInteger("attackCount", loopCount);
+            anim.SetInteger("attackCount", currentComboIndex);
 
-            yield return new WaitForSeconds(exitTime); // 공격애니메이션 출력시간겸 대기
-            attackCount--; // 카운터 내리기 
+            yield return new WaitForSeconds(attackDelay);
+            currentComboIndex--;
         }
 
-        // 종료지점
-        // 공격 카운트가 0이 되면 최대 콤보 상태 해제
         anim.SetTrigger("meleeAttackEnd");
 
-        if (max_combo)
-        {
-            Debug.Log("과열");
-            Invoke("overheatDelay", overheat);
-        }
-    }
-    void overheatDelay()//과도한 공격방지
-    {
-        max_combo = false;
+        characterControllerMove?.SetCanMove(true); // 이동 제한 해제
+        attackCoroutine = null;
     }
 }

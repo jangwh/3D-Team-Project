@@ -13,6 +13,10 @@ public class Monster : Character
     [Header("몬스터 설정")]
     public MonsterState initialState = MonsterState.Idle; // 초기 상태 (대기 또는 순찰)
 
+    [Header("공격 패턴")]
+    public List<AttackPatternSO> attackPatterns; // 사용할 스킬 목록
+    public Transform firePoint; // 원거리 공격 발사 위치
+
     [Header("순찰 설정")]
     public Transform[] patrolPoints; // 순찰 지점들
     public float patrolWaitTime = 2f;
@@ -31,12 +35,21 @@ public class Monster : Character
     private MonsterState currentState;    // 현재 몬스터의 행동 상태
     private bool isChasing = false;
     private bool isWaiting = false;
+    private bool isAttacking = false;
+
+    private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
+    private int currentAttackIndex = 0;
 
     void Awake()
     {
         currentState = initialState; //초기 상태로 설정
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
+
+        foreach (var pattern in attackPatterns)
+        {
+            attackCooldowns[pattern] = -999f;
+        }
     }
 
     protected override void Start()
@@ -49,7 +62,6 @@ public class Monster : Character
         }
 
         rigid.isKinematic = true;
-
         navMeshAgent.speed = moveSpeed;
         navMeshAgent.angularSpeed = rotateSpeed;
     }
@@ -60,11 +72,43 @@ public class Monster : Character
 
         if (isChasing)
         {
-            ChasePlayer(); 
+            ChaseAndAttackPlayer();
         }
         else
         {
             PerformInitialStateBehavior();
+        }
+    }
+
+    public void SetIsAttacking(bool status) //콤보 공격시 사용예정
+    {
+        isAttacking = status;
+    }
+
+    private void ChaseAndAttackPlayer()
+    {
+        if (player == null || attackPatterns.Count == 0 || isAttacking) return;
+
+        AttackPatternSO currentAttack = attackPatterns[currentAttackIndex];
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer > currentAttack.attackRange)
+        {
+            if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
+            navMeshAgent.SetDestination(player.position);
+        }
+        else
+        {
+            if (!navMeshAgent.isStopped) navMeshAgent.isStopped = true;
+
+            if (Time.time >= attackCooldowns[currentAttack] + currentAttack.attackCooldown)
+            {
+                transform.LookAt(player);
+                currentAttack.Execute(this, player);
+                attackCooldowns[currentAttack] = Time.time;
+
+                currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
+            }
         }
     }
 
@@ -110,15 +154,6 @@ public class Monster : Character
         isWaiting = false;
     }
 
-    private void ChasePlayer() //navmesh로 찾기, rigidbody를 kinematic으로 두고 상황에 따라 풀기
-    {
-        //처음에 감지하고 나서는 플레이어가 어느정도 멀어져도 따라오도록 만들기. 일정 거리를 벗어나면 CheckForPlayer로 isChasing상태를 초기화
-        if (player != null)
-        {
-            navMeshAgent.SetDestination(player.position);
-        }
-    }
-
     private void CheckForPlayer()
     {
         //1. 처음 플레이어를 Physics.OverlapSphere를 통해 감지하면 isChasing을 true로 만든다.
@@ -137,9 +172,9 @@ public class Monster : Character
         }
         else
         {
-            Vector3 detectionCenter = transform.position + transform.forward * detectionForwardOffset;
+            Vector3 detectionCenter = transform.position + transform.forward * detectionForwardOffset; 
             Collider[] hitColliders = Physics.OverlapSphere(detectionCenter, detectionRadius, playerLayer);
-            if (hitColliders.Length > 0)
+            if (hitColliders.Length > 0) //콜라이더가 붙어있는 오브젝트를 찾습니다!
             {
                 player = hitColliders[0].transform;
                 isChasing = true;
@@ -158,11 +193,20 @@ public class Monster : Character
 
     private void OnDrawGizmosSelected()
     {
+        //감지 범위 기즈모
         Gizmos.color = Color.red;
         Vector3 detectionCenter = transform.position + transform.forward * detectionForwardOffset;
         Gizmos.DrawWireSphere(detectionCenter, detectionRadius);
 
+        //추적 제한 범위 기즈모
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, losePlayerDistance);
+
+        //공격 범위 기즈모
+        if (attackPatterns != null && attackPatterns.Count > 0)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
+        }
     }
 }

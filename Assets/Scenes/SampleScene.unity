@@ -1241,6 +1241,50 @@ PrefabInstance:
       propertyPath: HitBox
       value: 
       objectReference: {fileID: 641214888}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: guardComboAnimationNames.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: guardComboAnimationNames.Array.data[0]
+      value: Armed-Shield-Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: guardComboAnimationNames.Array.data[1]
+      value: Armed-Shield-Block-GetHit1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: amberAttackComboAnimationNames.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: strongAttackComboAnimationNames.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: amberAttackComboAnimationNames.Array.data[0]
+      value: Sword-Attack-R1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: amberAttackComboAnimationNames.Array.data[1]
+      value: Sword-Attack-R2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: amberAttackComboAnimationNames.Array.data[2]
+      value: Sword-Attack-R5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: strongAttackComboAnimationNames.Array.data[0]
+      value: Sword-Attack-R3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: strongAttackComboAnimationNames.Array.data[1]
+      value: Sword-Attack-R6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: strongAttackComboAnimationNames.Array.data[2]
+      value: Sword-Attack-R4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6413797503320187466, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}

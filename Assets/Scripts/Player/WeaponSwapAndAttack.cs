@@ -20,13 +20,17 @@ public class WeaponSwapAndAttack : MonoBehaviour
     private Animator anim;
 
     [Header("Combo Settings")]
-    public List<string> comboAnimationNames = new List<string>() { };
+    public List<string> amberAttackComboAnimationNames = new List<string>() { };
+    public List<string> strongAttackComboAnimationNames = new List<string>() { };
+    public List<string> guardComboAnimationNames = new List<string>() { };
     public float comboInputBufferTime = 0.5f;
 
     public Collider HitBox;
 
+
     private int currentComboIndex = 0;
     [HideInInspector]public bool isAttacking = false;
+    private bool isGuard = false;
     private bool bufferedInput = false;
     private float inputBufferTimer = 0f;
 
@@ -51,6 +55,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         HandleWeaponSwap();
         HandleAttackInput();
         UpdateInputBuffer();
+        Guard();
     }
 
     void HandleWeaponSwap()
@@ -61,15 +66,40 @@ public class WeaponSwapAndAttack : MonoBehaviour
             SetWeapon(currentWeaponIndex);
         }
     }
-
+    void Guard()
+    {
+        if(Input.GetKeyDown(KeyCode.F) && !isGuard)
+        {
+            isGuard = true;
+            string animName = guardComboAnimationNames[0];
+            anim.Play(animName, 0, 0f);
+        }
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            isGuard = false;
+        }
+    }
     void HandleAttackInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isGuard)
         {
             if (!isAttacking)
             {
                 characterControllerMove.SetCanMove(false);
-                StartCombo();
+                StartAmberCombo();
+            }
+            else
+            {
+                bufferedInput = true;
+                inputBufferTimer = comboInputBufferTime;
+            }
+        }
+        if (Input.GetMouseButtonDown(1) && !isGuard)
+        {
+            if (!isAttacking)
+            {
+                characterControllerMove.SetCanMove(false);
+                StartStrongCombo();
             }
             else
             {
@@ -78,17 +108,35 @@ public class WeaponSwapAndAttack : MonoBehaviour
             }
         }
     }
-    void StartCombo()
+    void StartAmberCombo()
     {
         currentComboIndex = 0;
-        PlayComboAnimation();
+        PlayAmberComboAnimation();
         isAttacking = true;
     }
-    void PlayComboAnimation()
+    void StartStrongCombo()
     {
-        if (currentComboIndex < comboAnimationNames.Count)
+        currentComboIndex = 0;
+        PlayStrongComboAnimation();
+        isAttacking = true;
+    }
+    void PlayAmberComboAnimation()
+    {
+        if (currentComboIndex < amberAttackComboAnimationNames.Count)
         {
-            string animName = comboAnimationNames[currentComboIndex];
+            string animName = amberAttackComboAnimationNames[currentComboIndex];
+            anim.Play(animName, 0, 0f);
+        }
+        else
+        {
+            ResetCombo();
+        }
+    }
+    void PlayStrongComboAnimation()
+    {
+        if (currentComboIndex < strongAttackComboAnimationNames.Count)
+        {
+            string animName = strongAttackComboAnimationNames[currentComboIndex];
             anim.Play(animName, 0, 0f);
         }
         else
@@ -103,7 +151,21 @@ public class WeaponSwapAndAttack : MonoBehaviour
             currentComboIndex++;
             bufferedInput = false;
             inputBufferTimer = 0f;
-            PlayComboAnimation();
+            PlayAmberComboAnimation();
+        }
+        else
+        {
+            ResetCombo();
+        }
+    }
+    public void OnStrongComboAnimationEnd() // 애니메이션 이벤트에서 호출됨
+    {
+        if (bufferedInput)
+        {
+            currentComboIndex++;
+            bufferedInput = false;
+            inputBufferTimer = 0f;
+            PlayStrongComboAnimation();
         }
         else
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,11 +32,15 @@ public class Monster : Character
     private Transform player;             // 플레이어의 Transform
     private NavMeshAgent navMeshAgent;
     private Rigidbody rigid;
+    private Animator animator;
     private int currentPatrolIndex = 0;   // 현재 순찰 지점 인덱스
     private MonsterState currentState;    // 현재 몬스터의 행동 상태
+
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttacking = false;
+    private float CurrentSpeed;
+    
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
@@ -45,6 +50,7 @@ public class Monster : Character
         currentState = initialState; //초기 상태로 설정
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
 
         foreach (var pattern in attackPatterns)
         {
@@ -78,6 +84,11 @@ public class Monster : Character
         {
             PerformInitialStateBehavior();
         }
+
+        //애니메이션 업데이트 로직
+        CurrentSpeed = navMeshAgent.velocity.magnitude;
+        animator.SetFloat("Speed", CurrentSpeed);
+        
     }
 
     public void SetIsAttacking(bool status) //콤보 공격시 사용예정
@@ -87,7 +98,8 @@ public class Monster : Character
 
     private void ChaseAndAttackPlayer()
     {
-        if (player == null || attackPatterns.Count == 0 || isAttacking) return;
+        if (player == null || attackPatterns.Count == 0 || isAttacking) return; 
+        //플레이어가 없거나, 공격패턴이 없거나, *공격 중* 이면 이동,회전 로직 중단!
 
         AttackPatternSO currentAttack = attackPatterns[currentAttackIndex];
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -101,15 +113,42 @@ public class Monster : Character
         {
             if (!navMeshAgent.isStopped) navMeshAgent.isStopped = true;
 
+            Vector3 direction = (player.position - transform.position).normalized;
+            direction.y = 0;
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+            }
+
             if (Time.time >= attackCooldowns[currentAttack] + currentAttack.attackCooldown)
             {
-                transform.LookAt(player);
-                currentAttack.Execute(this, player);
-                attackCooldowns[currentAttack] = Time.time;
+                float angle = Vector3.Angle(transform.forward, direction);
 
-                currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
+                if (angle < 5f)
+                {
+                    StartCoroutine(AttackSequence(currentAttack));
+                }
             }
         }
+    }
+
+    private IEnumerator AttackSequence(AttackPatternSO currentAttack) //공격 루틴입니다.
+    {
+        isAttacking = true;
+        navMeshAgent.isStopped = true; //행동 중단
+        //TODO : 애니메이션 재생시작
+
+        attackCooldowns[currentAttack] = Time.time;
+        currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
+
+        yield return new WaitForSeconds(currentAttack.preAttackDelay); //선딜
+
+        currentAttack.Execute(this, player); //공격. 히트박스 컨트롤러를 통해서 공격 유지시간을 설정합니다
+
+        yield return new WaitForSeconds(currentAttack.postAttackDelay); //후딜
+
+        isAttacking = false;
     }
 
     private void PerformInitialStateBehavior()
@@ -143,7 +182,7 @@ public class Monster : Character
         }
     }
 
-    private IEnumerator WaitAtPatrolPoint()
+    private IEnumerator WaitAtPatrolPoint() //순찰 시 방향 전환할때 잠깐 멈춤
     {
         isWaiting = true;
         yield return new WaitForSeconds(patrolWaitTime);
@@ -156,10 +195,7 @@ public class Monster : Character
 
     private void CheckForPlayer()
     {
-        //1. 처음 플레이어를 Physics.OverlapSphere를 통해 감지하면 isChasing을 true로 만든다.
-        //이 때 OverlapSphere의 위치는 몬스터의 살짝 앞쪽으로 해서 뒤쪽은 짧게, 앞은 길게 감지 하도록 함
-        //2. 플레이가 일정 거리를 벗어나면 ChasePlayer() 함수에서 이 함수를 불러와서 상태 초기화
-
+        //losePlayerDistance를 벗어나면 추적을 종료
         if (isChasing)
         {
             if (player == null || Vector3.Distance(transform.position, player.position) > losePlayerDistance)
@@ -168,6 +204,7 @@ public class Monster : Character
                 player = null;
                 print("플레이어를 놓쳤습니다. 순찰 상태로 복귀합니다.");
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
+                //애니메이터 오버라이드로 상태 변환
             }
         }
         else
@@ -180,11 +217,12 @@ public class Monster : Character
                 isChasing = true;
                 print("플레이어를 발견! 추적을 시작합니다.");
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
+                //원래의 애니메이터로 복귀
             }
         }
     }
 
-    private IEnumerator StopAndResume(float waitTime)
+    private IEnumerator StopAndResume(float waitTime) //순찰/공격 상태 변환시 바뀝니다.
     {
         navMeshAgent.isStopped = true;
         yield return new WaitForSeconds(waitTime);

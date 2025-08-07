@@ -9,6 +9,16 @@ public abstract class AttackPatternSO : ScriptableObject //몬스터 패턴의 �
     public float attackRange = 2f;
     public float attackCooldown = 2f;
 
+    [Header("딜레이 설정")]
+    public float preAttackDelay = 0.5f;
+    public float attackDuration = 0.5f;
+    public float postAttackDelay = 0.5f;
+
+    [Header("공격에 사용할 히트박스")]
+    public List<string> hitboxNames;
+
+    public Animation animation;
+
     public abstract void Execute(Monster monster, Transform target, Transform firePoint = null);
     //각 공격 패턴의 실제로직을 구현할 추상 메서드입니다. 
     //attacker: 공격을 수행하는 몬스터

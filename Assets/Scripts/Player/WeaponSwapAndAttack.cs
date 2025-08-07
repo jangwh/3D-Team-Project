@@ -10,6 +10,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         public string weaponName;
         public AnimatorController animatorController;
+        public GameObject weapon;
     }
 
     public List<WeaponData> weapons = new List<WeaponData>();
@@ -19,15 +20,18 @@ public class WeaponSwapAndAttack : MonoBehaviour
     private Animator anim;
 
     [Header("Combo Settings")]
-    public List<string> comboAnimationNames = new List<string>() { "Attack1", "Attack2", "Attack3" };
+    public List<string> comboAnimationNames = new List<string>() { };
     public float comboInputBufferTime = 0.5f;
 
+    public Collider HitBox;
+
     private int currentComboIndex = 0;
-    private bool isAttacking = false;
+    [HideInInspector]public bool isAttacking = false;
     private bool bufferedInput = false;
     private float inputBufferTimer = 0f;
 
     private int currentWeaponIndex = 0;
+
 
     void Awake()
     {
@@ -38,8 +42,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
             Debug.LogError("무기 데이터가 비어 있습니다!");
             return;
         }
-
         SetWeapon(currentWeaponIndex);
+        HitBox.enabled = false;
     }
 
     void Update()
@@ -64,6 +68,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         {
             if (!isAttacking)
             {
+                characterControllerMove.SetCanMove(false);
                 StartCombo();
             }
             else
@@ -105,6 +110,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
             ResetCombo();
         }
     }
+    public void OnHitBoxActive()
+    {
+        StartCoroutine(HitOn());
+    }
     void UpdateInputBuffer()
     {
         if (bufferedInput)
@@ -122,10 +131,17 @@ public class WeaponSwapAndAttack : MonoBehaviour
         isAttacking = false;
         bufferedInput = false;
         inputBufferTimer = 0f;
+        characterControllerMove.SetCanMove(true);
     }
     void SetWeapon(int index)
     {
         var weapon = weapons[index];
         anim.runtimeAnimatorController = weapon.animatorController;
+    }
+    IEnumerator HitOn()
+    {
+        HitBox.enabled = true;
+        yield return new WaitForSeconds(0.4f);
+        HitBox.enabled = false;
     }
 }

@@ -30,7 +30,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.04, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1852902530328496704}
   m_Father: {fileID: 2041310120345332792}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4309466410792384038
@@ -123,13 +124,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3769178132898551390}
+  - component: {fileID: 6263991763762980821}
   - component: {fileID: 3647057142162898083}
   - component: {fileID: 5250690679937090990}
   - component: {fileID: 3092123705648822597}
-  - component: {fileID: 6557835927564845103}
   - component: {fileID: 2068816720470077978}
   - component: {fileID: 4951810132561884859}
   - component: {fileID: 1535688085760761058}
+  - component: {fileID: 1887903568657412272}
   m_Layer: 0
   m_Name: RPG-Character
   m_TagString: Player
@@ -154,6 +156,25 @@ Transform:
   - {fileID: 2041310120345332778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6263991763762980821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4402190750194928735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249a27a61d4e7594a936e099a48c4bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 0
+  currentHp: 0
+  damage: 0
+  moveSpeed: 0
+  rotateSpeed: 0
+  lastAttackTime: 0
+  attackInterval: 0
 --- !u!114 &3647057142162898083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,13 +208,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - weaponName: Fist
-    animatorController: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
   - weaponName: Sword
     animatorController: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
+    weapon: {fileID: 98763189987259298}
   characterControllerMove: {fileID: 3092123705648822597}
-  maxComboCount: 3
-  attackDelay: 0.5
+  comboAnimationNames:
+  - Sword-Attack-R1
+  - Sword-Attack-R2
+  - Sword-Attack-R5
+  comboInputBufferTime: 0.5
+  HitBox: {fileID: 6413797503320187466}
+  isAttacking: 0
 --- !u!114 &3092123705648822597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,24 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 386ad697905dab548b520272e9b9f420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData:
-    weaponName: 
-    animatorController: {fileID: 0}
   moveSpeed: 1
   sprintSpeed: 3
   isBattle: 0
---- !u!114 &6557835927564845103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4402190750194928735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48251641f8b61c438f0a196e4b7cbec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   turnSpeed: 180
   canTarget: {fileID: 8420016958962858718}
   lookUpSpeed: 60
@@ -303,6 +313,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &1887903568657412272
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4402190750194928735}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.2, z: 0}
 --- !u!1 &4447340169906469700
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,6 +419,80 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6413797503320187466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1852902530328496704}
+  - component: {fileID: 718786270470191753}
+  - component: {fileID: 3421663750215883688}
+  m_Layer: 0
+  m_Name: HitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1852902530328496704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413797503320187466}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 783597845803575251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &718786270470191753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413797503320187466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378119b2aea279344bf3784f5610376c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 0
+  currentHp: 0
+  damage: 0
+  moveSpeed: 0
+  rotateSpeed: 0
+  lastAttackTime: 0
+  attackInterval: 0
+  weapondamage: 50
+--- !u!65 &3421663750215883688
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413797503320187466}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2631851, y: 0.09375068, z: 1.4363024}
+  m_Center: {x: -0.18242584, y: 0.005157099, z: 0.52952826}
 --- !u!1001 &2041310120344942232
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -68,13 +68,13 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void Guard()
     {
-        if(Input.GetKeyDown(KeyCode.F) && !isGuard)
+        if(Input.GetKeyDown(KeyCode.R) && !isGuard)
         {
             isGuard = true;
             string animName = guardComboAnimationNames[0];
             anim.Play(animName, 0, 0f);
         }
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.R))
         {
             isGuard = false;
         }

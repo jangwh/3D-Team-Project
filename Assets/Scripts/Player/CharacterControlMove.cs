@@ -28,6 +28,8 @@ public class CharacterControllerMove : MonoBehaviour
     public float canTargetMaxHeight; //canTarget이 올라갈 수 있는 최대 높이
     public float canTargetMinHeight; //canTarget이 내려갈 수 있는 최소 높이
 
+    public Collider playerColl;
+
     void Awake()
     {
         charCtrl = GetComponent<CharacterController>();
@@ -44,6 +46,7 @@ public class CharacterControllerMove : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             anim.SetTrigger("RollDodge");
+            StartCoroutine(Invincible());
         }
     }
     void PlayerMove()
@@ -111,5 +114,11 @@ public class CharacterControllerMove : MonoBehaviour
     public void SetCanMove(bool value)
     {
         canMove = value;
+    }
+    IEnumerator Invincible()
+    {
+        playerColl.enabled = false;
+        yield return new WaitForSeconds(1f);
+        playerColl.enabled = true;
     }
 }

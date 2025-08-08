@@ -16,7 +16,6 @@ public class CharacterControllerMove : MonoBehaviour
 
     private bool canMove = true;
     private bool isRollDodge = false;
-    private bool isDie = false;
 
     private float currentSpeed; //걷던 뛰던 현재 움직여야 하는 속도
     private float rawSpeed; //걷고 있으면 1, 뛰고 있으면 2가 되는 입력속도
@@ -50,7 +49,6 @@ public class CharacterControllerMove : MonoBehaviour
         }
 
         PlayerRollDodge();
-        Die();
     }
     void Stamina()
     {
@@ -61,16 +59,6 @@ public class CharacterControllerMove : MonoBehaviour
         else if (player.currentStamina >= player.MaxStamina)
         {
             player.currentStamina = player.MaxStamina;
-        }
-    }
-    void Die()
-    {
-        if(isDie) return;
-
-        if(player.currentHp <=0 && !isDie)
-        {
-            isDie = true;
-            anim.SetTrigger("Die");
         }
     }
     void PlayerRollDodge() 

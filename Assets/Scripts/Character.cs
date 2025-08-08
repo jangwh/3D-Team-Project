@@ -16,9 +16,16 @@ public class Character : MonoBehaviour
     {
         currentHp = maxHp;
     }
-
+    void Update()
+    {
+        Die();
+    }
     public virtual void TakeDamage(float damage)
     {
         currentHp -= damage;
+    }
+    public virtual void Die()
+    {
+
     }
 }

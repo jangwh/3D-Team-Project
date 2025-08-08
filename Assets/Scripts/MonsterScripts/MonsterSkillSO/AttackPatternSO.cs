@@ -17,7 +17,8 @@ public abstract class AttackPatternSO : ScriptableObject //몬스터 패턴의 �
     [Header("공격에 사용할 히트박스")]
     public List<string> hitboxNames;
 
-    public Animation animation;
+    [Header("애니메이션 트리거 이름")]
+    public string attackAnimationTrigger;
 
     public abstract void Execute(Monster monster, Transform target, Transform firePoint = null);
     //각 공격 패턴의 실제로직을 구현할 추상 메서드입니다. 

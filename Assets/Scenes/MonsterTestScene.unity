@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 281813642}
   - component: {fileID: 281813643}
+  - component: {fileID: 281813644}
   m_Layer: 0
   m_Name: HandHitbox
   m_TagString: Untagged
@@ -177,6 +178,19 @@ CapsuleCollider:
   m_Height: 2.684909
   m_Direction: 0
   m_Center: {x: 0.16292427, y: 1.2730622e-10, z: -0.0000000047287094}
+--- !u!114 &281813644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281813641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a71e9b7904ebce4598297383fad50ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
 --- !u!4 &782495485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2407811827230844018, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
@@ -736,6 +750,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1295624531169711778, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
+      propertyPath: attackPatterns.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295624531169711778, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
       propertyPath: patrolPoints.Array.data[0]
       value: 
       objectReference: {fileID: 1556321656}
@@ -743,6 +761,14 @@ PrefabInstance:
       propertyPath: patrolPoints.Array.data[1]
       value: 
       objectReference: {fileID: 1379679410}
+    - target: {fileID: 1295624531169711778, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
+      propertyPath: attackPatterns.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: ca0771a7d88417943843e7142283b485, type: 2}
+    - target: {fileID: 1295624531169711778, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
+      propertyPath: attackPatterns.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 739693590d6ecc042a5efb3e0fa9a77f, type: 2}
     - target: {fileID: 1923960480472368261, guid: f535766ac8cc06d48aa46d042d320025, type: 3}
       propertyPath: hitboxes.Array.size
       value: 1

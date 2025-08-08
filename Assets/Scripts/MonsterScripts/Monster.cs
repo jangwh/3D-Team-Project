@@ -6,13 +6,13 @@ using UnityEngine.AI;
 
 public class Monster : Character
 {
-    public enum MonsterState //몬스터의 기본 상태 2가지
+    public enum MonsterIdleState //몬스터의 Idle 상태 2가지
     {
         Idle, Patrol
     }
 
     [Header("몬스터 설정")]
-    public MonsterState initialState = MonsterState.Idle; // 초기 상태 (대기 또는 순찰)
+    public MonsterIdleState initialState = MonsterIdleState.Idle; // 초기 상태 (대기 또는 순찰)
 
     [Header("공격 패턴")]
     public List<AttackPatternSO> attackPatterns; // 사용할 스킬 목록
@@ -34,8 +34,9 @@ public class Monster : Character
     private Rigidbody rigid;
     private Animator animator;
     private int currentPatrolIndex = 0;   // 현재 순찰 지점 인덱스
-    private MonsterState currentState;    // 현재 몬스터의 행동 상태
+    private MonsterIdleState currentState;    // 현재 몬스터의 행동 상태
 
+    //현상태
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttacking = false;
@@ -61,10 +62,10 @@ public class Monster : Character
     protected override void Start()
     {
         base.Start();
-        if (initialState == MonsterState.Patrol && (patrolPoints == null || patrolPoints.Length == 0))
+        if (initialState == MonsterIdleState.Patrol && (patrolPoints == null || patrolPoints.Length == 0))
         {
             print("몬스터가 순찰 상태로 설정되었지만 순찰 지점이 없습니다. 대기 상태로 전환합니다.");
-            currentState = MonsterState.Idle;
+            currentState = MonsterIdleState.Idle;
         }
 
         rigid.isKinematic = true;
@@ -111,7 +112,10 @@ public class Monster : Character
         }
         else
         {
-            if (!navMeshAgent.isStopped) navMeshAgent.isStopped = true;
+            if (!navMeshAgent.isStopped) 
+            {
+                navMeshAgent.isStopped = true;
+            }
 
             Vector3 direction = (player.position - transform.position).normalized;
             direction.y = 0;
@@ -137,28 +141,38 @@ public class Monster : Character
     {
         isAttacking = true;
         navMeshAgent.isStopped = true; //행동 중단
-        //TODO : 애니메이션 재생시작
 
+        if (!string.IsNullOrEmpty(currentAttack.attackAnimationTrigger))
+        {
+            animator.SetTrigger(currentAttack.attackAnimationTrigger);
+            print($"현재 실행된 trigger : {currentAttack.attackAnimationTrigger}");
+        }
+        
         attackCooldowns[currentAttack] = Time.time;
-        currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
-
+        
         yield return new WaitForSeconds(currentAttack.preAttackDelay); //선딜
 
         currentAttack.Execute(this, player); //공격. 히트박스 컨트롤러를 통해서 공격 유지시간을 설정합니다
 
-        yield return new WaitForSeconds(currentAttack.postAttackDelay); //후딜
+    }
 
+    //애니메이션 클립의 event에서 마지막 프레임에 event를 추가한 후 불러올 함수입니다. 
+    //코루틴과 애니메이션의 길이를 일치시켜서 isAttacking의 토글에 문제가 없도록 만듭니다.
+    public void OnAttackAnimationEnd()
+    {
+        currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
         isAttacking = false;
+        Debug.Log("애니메이션 이벤트: 공격 종료!");
     }
 
     private void PerformInitialStateBehavior()
     {
         switch (currentState)
         {
-            case MonsterState.Idle:
+            case MonsterIdleState.Idle:
                 Idle();
                 break;
-            case MonsterState.Patrol:
+            case MonsterIdleState.Patrol:
                 Patrol();
                 break;
         }
@@ -203,8 +217,8 @@ public class Monster : Character
                 isChasing = false;
                 player = null;
                 print("플레이어를 놓쳤습니다. 순찰 상태로 복귀합니다.");
+                animator.SetFloat("IdleState", 0);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
-                //애니메이터 오버라이드로 상태 변환
             }
         }
         else
@@ -216,8 +230,8 @@ public class Monster : Character
                 player = hitColliders[0].transform;
                 isChasing = true;
                 print("플레이어를 발견! 추적을 시작합니다.");
+                animator.SetFloat("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
-                //원래의 애니메이터로 복귀
             }
         }
     }

@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class WeaponSwapAndAttack : MonoBehaviour
@@ -9,8 +9,12 @@ public class WeaponSwapAndAttack : MonoBehaviour
     public class WeaponData
     {
         public string weaponName;
-        public AnimatorController animatorController;
+        public RuntimeAnimatorController controllers;
         public GameObject weapon;
+        public Collider HitBox;
+        [Header("Combo Settings")]
+        public List<string> amberAttackComboAnimationNames = new List<string>() { };
+        public List<string> strongAttackComboAnimationNames = new List<string>() { };
     }
 
     public Player player;
@@ -20,12 +24,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
     public CharacterControllerMove characterControllerMove; // 이동 제어 스크립트 참조
     private Animator anim;
 
-    [Header("Combo Settings")]
-    public List<string> amberAttackComboAnimationNames = new List<string>() { };
-    public List<string> strongAttackComboAnimationNames = new List<string>() { };
     public float comboInputBufferTime = 0.5f;
 
-    public Collider HitBox;
     public Collider GuardBox;
 
 
@@ -48,7 +48,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
             return;
         }
         SetWeapon(currentWeaponIndex);
-        HitBox.enabled = false;
+        weapons[currentWeaponIndex].HitBox.enabled = false;
         GuardBox.enabled = false;
     }
     void Start()
@@ -65,17 +65,35 @@ public class WeaponSwapAndAttack : MonoBehaviour
             return;
         }
         HandleWeaponSwap();
-        HandleAttackInput();
-        UpdateInputBuffer();
-        Guard();
+
+        if (weapons[currentWeaponIndex].weapon != null)
+        {
+            HandleAttackInput();
+            UpdateInputBuffer();
+            Guard();
+        }
     }
 
     void HandleWeaponSwap()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
+            // 현재 무기 비활성화
+            if (weapons[currentWeaponIndex].weapon != null)
+            {
+                weapons[currentWeaponIndex].weapon.SetActive(false);
+            }
+            // 스왑
             currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Count;
             SetWeapon(currentWeaponIndex);
+            // 상태 초기화
+            StopAllCoroutines(); // 이전 무기 히트박스/가드박스 코루틴 중지
+            ResetCombo();        // 콤보 상태 및 이동 가능 상태 복원
+            if (weapons[currentWeaponIndex].weapon != null)
+            {
+                weapons[currentWeaponIndex].HitBox.enabled = false;
+                GuardBox.enabled = false;
+            }
         }
     }
     void Guard()
@@ -137,10 +155,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void PlayAmberComboAnimation()
     {
-        if (currentComboIndex < amberAttackComboAnimationNames.Count)
+        var comboList = weapons[currentWeaponIndex].amberAttackComboAnimationNames;
+        if (currentComboIndex < comboList.Count)
         {
-            string animName = amberAttackComboAnimationNames[currentComboIndex];
-            anim.Play(animName, 0, 0f);
+            anim.Play(comboList[currentComboIndex], 0, 0f);
             player.currentStamina -= 5;
         }
         else
@@ -148,12 +166,13 @@ public class WeaponSwapAndAttack : MonoBehaviour
             ResetCombo();
         }
     }
+
     void PlayStrongComboAnimation()
     {
-        if (currentComboIndex < strongAttackComboAnimationNames.Count)
+        var comboList = weapons[currentWeaponIndex].strongAttackComboAnimationNames;
+        if (currentComboIndex < comboList.Count)
         {
-            string animName = strongAttackComboAnimationNames[currentComboIndex];
-            anim.Play(animName, 0, 0f);
+            anim.Play(comboList[currentComboIndex], 0, 0f);
             player.currentStamina -= 10;
         }
         else
@@ -161,9 +180,13 @@ public class WeaponSwapAndAttack : MonoBehaviour
             ResetCombo();
         }
     }
-    public void OnComboAnimationEnd() // 애니메이션 이벤트에서 호출됨
+
+    // 애니메이션 이벤트에서 호출
+    public void OnComboAnimationEnd()
     {
-        if (bufferedInput)
+        var comboList = weapons[currentWeaponIndex].amberAttackComboAnimationNames;
+
+        if (bufferedInput && currentComboIndex + 1 < comboList.Count)
         {
             currentComboIndex++;
             bufferedInput = false;
@@ -175,9 +198,13 @@ public class WeaponSwapAndAttack : MonoBehaviour
             ResetCombo();
         }
     }
-    public void OnStrongComboAnimationEnd() // 애니메이션 이벤트에서 호출됨
+
+    // 애니메이션 이벤트에서 호출
+    public void OnStrongComboAnimationEnd()
     {
-        if (bufferedInput)
+        var comboList = weapons[currentWeaponIndex].strongAttackComboAnimationNames;
+
+        if (bufferedInput && currentComboIndex + 1 < comboList.Count)
         {
             currentComboIndex++;
             bufferedInput = false;
@@ -195,7 +222,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     public void OnGuardBoxActive()
     {
-        StartCoroutine(GuardtOn());
+        StartCoroutine(GuardOn());
     }
     void UpdateInputBuffer()
     {
@@ -219,15 +246,26 @@ public class WeaponSwapAndAttack : MonoBehaviour
     void SetWeapon(int index)
     {
         var weapon = weapons[index];
-        anim.runtimeAnimatorController = weapon.animatorController;
+        anim.runtimeAnimatorController = weapon.controllers;
+
+        if (weapons[index].weaponName != "None")
+        {
+            anim.SetLayerWeight(1, 0);
+            characterControllerMove.isBattle = true;
+            weapons[index].weapon.SetActive(true);
+        }
+        else
+        {
+            characterControllerMove.isBattle = false;
+        }
     }
     IEnumerator HitOn()
     {
-        HitBox.enabled = true;
+        weapons[currentWeaponIndex].HitBox.enabled = true;
         yield return new WaitForSeconds(0.4f);
-        HitBox.enabled = false;
+        weapons[currentWeaponIndex].HitBox.enabled = false;
     }
-    IEnumerator GuardtOn()
+    IEnumerator GuardOn()
     {
         GuardBox.enabled = true;
         yield return new WaitForSeconds(1f);

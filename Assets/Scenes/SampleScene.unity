@@ -1186,6 +1186,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8115118011066930593, guid: cb3bda8c88c43ae4a812b4e4770fbc13, type: 3}
+      propertyPath: weapons.Array.data[2].amberAttackComboAnimationNames.Array.data[0]
+      value: 2Hand-Axe-Attack3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8115118011066930593, guid: cb3bda8c88c43ae4a812b4e4770fbc13, type: 3}
+      propertyPath: weapons.Array.data[2].amberAttackComboAnimationNames.Array.data[1]
+      value: 2Hand-Axe-Attack2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8115118011066930593, guid: cb3bda8c88c43ae4a812b4e4770fbc13, type: 3}
+      propertyPath: weapons.Array.data[2].amberAttackComboAnimationNames.Array.data[2]
+      value: 2Hand-Axe-Attack1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

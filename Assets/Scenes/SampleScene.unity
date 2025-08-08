@@ -394,6 +394,7 @@ MonoBehaviour:
   rotateSpeed: 0
   lastAttackTime: 0
   attackInterval: 0
+  stamina: 0
   weapondamage: 50
 --- !u!1 &705507993
 GameObject:
@@ -792,6 +793,33 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 1
+--- !u!1 &1458162425 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4447340169906469700, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+  m_PrefabInstance: {fileID: 147943209934830020}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1458162429
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458162425}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300022, guid: 212f1e39faa16df4fad05922a8faca54, type: 3}
 --- !u!1 &1503518483
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,6 +1032,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2041310120345333206, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
   m_PrefabInstance: {fileID: 147943209934830020}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1697377506 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6263991763762980821, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+  m_PrefabInstance: {fileID: 147943209934830020}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249a27a61d4e7594a936e099a48c4bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1974068150
 GameObject:
   m_ObjectHideFlags: 0
@@ -1189,6 +1228,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3092123705648822597, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1697377506}
     - target: {fileID: 3647057142162898083, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
       propertyPath: virtualCamera
       value: 
@@ -1242,6 +1285,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 641214888}
     - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1697377506}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: GuardBox
+      value: 
+      objectReference: {fileID: 1458162429}
+    - target: {fileID: 5250690679937090990, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
       propertyPath: guardComboAnimationNames.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -1285,11 +1336,22 @@ PrefabInstance:
       propertyPath: strongAttackComboAnimationNames.Array.data[2]
       value: Sword-Attack-R4
       objectReference: {fileID: 0}
+    - target: {fileID: 6263991763762980821, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: maxHp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263991763762980821, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      propertyPath: stamina
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6413797503320187466, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4447340169906469700, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1458162429}
     - targetCorrespondingSourceObject: {fileID: 98763189987259298, guid: 1fac7be05423d8440b96f345f4a240c6, type: 3}
       insertIndex: 1
       addedObject: {fileID: 641214889}

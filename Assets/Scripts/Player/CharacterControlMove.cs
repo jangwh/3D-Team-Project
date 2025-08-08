@@ -8,12 +8,14 @@ public class CharacterControllerMove : MonoBehaviour
 {
     CharacterController charCtrl;
     Animator anim;
+    public Player player;
 
     public float moveSpeed; //걸을때 최고속도 = 1
     public float sprintSpeed; //뛸때 최고속도 = 3
     public bool isBattle;
 
     private bool canMove = true;
+    private bool isRollDodge = false;
 
     private float currentSpeed; //걷던 뛰던 현재 움직여야 하는 속도
     private float rawSpeed; //걷고 있으면 1, 뛰고 있으면 2가 되는 입력속도
@@ -38,16 +40,45 @@ public class CharacterControllerMove : MonoBehaviour
         if (!canMove) return;
         MosueMove();
         PlayerMove();
+        Stamina();
+        if (player.currentStamina <= 0)
+        {
+            player.currentStamina = 0;
+            isRollDodge = false;
+            return;
+        }
 
         isBattle = true;
-        
-        if(Input.GetKeyDown(KeyCode.Space))
+        PlayerRollDodge();
+
+    }
+    void Stamina()
+    {
+        if (player.currentStamina < player.MaxStamina)
         {
+            player.currentStamina += 10 * Time.deltaTime;
+        }
+        else if (player.currentStamina >= player.MaxStamina)
+        {
+            player.currentStamina = player.MaxStamina;
+        }
+    }
+    void PlayerRollDodge()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !isRollDodge)
+        {
+            isRollDodge = true;
             anim.SetTrigger("RollDodge");
+            player.currentStamina -= 20f;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isRollDodge = false;
         }
     }
     void PlayerMove()
     {
+        if (player.currentStamina <= 0) return;
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -90,6 +121,10 @@ public class CharacterControllerMove : MonoBehaviour
             anim.SetFloat("XDir", x);
             anim.SetFloat("YDir", z);
             anim.SetFloat("Speed", rawSpeed);
+        }
+        if(currentSpeed >= 1)
+        {
+            player.currentStamina -= 0.1f * Time.deltaTime;
         }
     }
     void MosueMove()

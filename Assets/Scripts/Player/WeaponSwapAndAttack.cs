@@ -13,6 +13,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         public GameObject weapon;
     }
 
+    public Player player;
     public List<WeaponData> weapons = new List<WeaponData>();
 
     [Header("References")]
@@ -22,10 +23,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
     [Header("Combo Settings")]
     public List<string> amberAttackComboAnimationNames = new List<string>() { };
     public List<string> strongAttackComboAnimationNames = new List<string>() { };
-    public List<string> guardComboAnimationNames = new List<string>() { };
     public float comboInputBufferTime = 0.5f;
 
     public Collider HitBox;
+    public Collider GuardBox;
 
 
     private int currentComboIndex = 0;
@@ -48,10 +49,21 @@ public class WeaponSwapAndAttack : MonoBehaviour
         }
         SetWeapon(currentWeaponIndex);
         HitBox.enabled = false;
+        GuardBox.enabled = false;
     }
-
+    void Start()
+    {
+        anim.SetLayerWeight(1, 0);
+    }
     void Update()
     {
+        if (player.currentStamina <= 0)
+        {
+            player.currentStamina = 0;
+            isGuard = false;
+            isAttacking = false;
+            return;
+        }
         HandleWeaponSwap();
         HandleAttackInput();
         UpdateInputBuffer();
@@ -70,12 +82,15 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.R) && !isGuard)
         {
+            anim.SetLayerWeight(1, 1f);
             isGuard = true;
-            string animName = guardComboAnimationNames[0];
-            anim.Play(animName, 0, 0f);
+            anim.SetTrigger("Guard");
+            player.currentStamina -= 3;
+            
         }
         if (Input.GetKeyUp(KeyCode.R))
         {
+            anim.SetLayerWeight(1, 0);
             isGuard = false;
         }
     }
@@ -126,6 +141,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         {
             string animName = amberAttackComboAnimationNames[currentComboIndex];
             anim.Play(animName, 0, 0f);
+            player.currentStamina -= 5;
         }
         else
         {
@@ -138,6 +154,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         {
             string animName = strongAttackComboAnimationNames[currentComboIndex];
             anim.Play(animName, 0, 0f);
+            player.currentStamina -= 10;
         }
         else
         {
@@ -176,6 +193,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         StartCoroutine(HitOn());
     }
+    public void OnGuardBoxActive()
+    {
+        StartCoroutine(GuardtOn());
+    }
     void UpdateInputBuffer()
     {
         if (bufferedInput)
@@ -205,5 +226,11 @@ public class WeaponSwapAndAttack : MonoBehaviour
         HitBox.enabled = true;
         yield return new WaitForSeconds(0.4f);
         HitBox.enabled = false;
+    }
+    IEnumerator GuardtOn()
+    {
+        GuardBox.enabled = true;
+        yield return new WaitForSeconds(1f);
+        GuardBox.enabled = false;
     }
 }

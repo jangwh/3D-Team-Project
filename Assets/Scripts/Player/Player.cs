@@ -1,8 +1,8 @@
+using Lean.Pool;
 using RPGCharacterAnims.Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static WeaponSwapAndAttack;
 
 public class Player : Character
 {
@@ -10,7 +10,7 @@ public class Player : Character
 
     public float MaxStamina;
     public float currentStamina;
-    private bool isDie = false;
+    [HideInInspector]public bool isDie = false;
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -26,12 +26,24 @@ public class Player : Character
     }
     public override void Die()
     {
-            if (isDie) return;
+        if (isDie) return;
 
-            if (currentHp <= 0 && !isDie)
-            {
-                isDie = true;
-                anim.SetTrigger("Die");
-            }
+        if (currentHp <= 0 && !isDie)
+        {
+            isDie = true;
+            anim.SetTrigger("Die");
+            StartCoroutine(DieAnimation());
+        }
+    }
+    public void Init()
+    {
+        currentHp = maxHp;
+        currentStamina = MaxStamina;
+        isDie = false;
+    }
+    IEnumerator DieAnimation()
+    {
+        yield return new WaitForSeconds(1f);
+        LeanPool.Despawn(this);
     }
 }

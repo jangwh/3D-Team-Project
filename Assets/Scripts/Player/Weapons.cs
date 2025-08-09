@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapons : Player
+public class Weapons : MonoBehaviour
 {
+    public Player player;
     public float weapondamage = 50;
 
     void OnTriggerEnter(Collider other)

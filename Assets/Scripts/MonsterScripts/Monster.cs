@@ -125,7 +125,7 @@ public class Monster : Character
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
             }
 
-            if (Time.time >= attackCooldowns[currentAttack] + currentAttack.attackCooldown)
+            if (Time.time >= attackCooldowns[currentAttack] + currentAttack.attackCooldown) //쿨타임아니면 실행
             {
                 float angle = Vector3.Angle(transform.forward, direction);
 
@@ -133,6 +133,10 @@ public class Monster : Character
                 {
                     StartCoroutine(AttackSequence(currentAttack));
                 }
+            }
+            else //쿨타임이면 다음 스킬로 넘어가기
+            {
+                currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
             }
         }
     }
@@ -163,6 +167,18 @@ public class Monster : Character
         currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
         isAttacking = false;
         Debug.Log("애니메이션 이벤트: 공격 종료!");
+
+        ////쿨타임 디버그 라인입니다.
+        //Debug.Log("---현재 스킬 쿨타임 현황---");
+        //foreach (var pattern in attackPatterns)
+        //{
+        //    float lastAttackTime = attackCooldowns[pattern];
+        //    float cooldownDuration = pattern.attackDuration;
+        //    float remainingTime = (lastAttackTime + cooldownDuration) - Time.time;
+
+        //    Debug.Log($"- {pattern.name}: {remainingTime:F2}초 남음"); 
+        //}
+        //Debug.Log("--------------------------");
     }
 
     private void PerformInitialStateBehavior()
@@ -217,7 +233,7 @@ public class Monster : Character
                 isChasing = false;
                 player = null;
                 print("플레이어를 놓쳤습니다. 순찰 상태로 복귀합니다.");
-                animator.SetFloat("IdleState", 0);
+                animator.SetInteger("IdleState", 0);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
             }
         }
@@ -230,7 +246,7 @@ public class Monster : Character
                 player = hitColliders[0].transform;
                 isChasing = true;
                 print("플레이어를 발견! 추적을 시작합니다.");
-                animator.SetFloat("IdleState", 1);
+                animator.SetInteger("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
             }
         }

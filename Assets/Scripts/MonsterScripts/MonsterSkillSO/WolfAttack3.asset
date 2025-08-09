@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   attackRange: 10
-  attackCooldown: 2
+  attackCooldown: 10
   preAttackDelay: 0.5
   attackDuration: 0.5
   postAttackDelay: 0.5

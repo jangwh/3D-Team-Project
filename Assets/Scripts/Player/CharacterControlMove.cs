@@ -13,6 +13,7 @@ public class CharacterControllerMove : MonoBehaviour
     public float moveSpeed; //걸을때 최고속도 = 1
     public float sprintSpeed; //뛸때 최고속도 = 3
     public bool isBattle;
+    public bool isJump;
 
     private bool canMove = true;
     private bool isRollDodge = false;
@@ -47,8 +48,8 @@ public class CharacterControllerMove : MonoBehaviour
             isRollDodge = false;
             return;
         }
-
         PlayerRollDodge();
+        Jump();
     }
     void Stamina()
     {
@@ -59,19 +60,6 @@ public class CharacterControllerMove : MonoBehaviour
         else if (player.currentStamina >= player.MaxStamina)
         {
             player.currentStamina = player.MaxStamina;
-        }
-    }
-    void PlayerRollDodge() 
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && !isRollDodge && !player.isDie)
-        {
-            isRollDodge = true;
-            anim.SetTrigger("RollDodge");
-            player.currentStamina -= 20f;
-        }
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isRollDodge = false;
         }
     }
     void PlayerMove()
@@ -139,6 +127,33 @@ public class CharacterControllerMove : MonoBehaviour
         //Mathf.Clamp(값, 최소값, 최대값) : 값이 만약 최소값이나 최대값 사이의 값이면 그대로 반환, 아니면 최소값이나 최대값을 반환
         canTargetPos.y = Mathf.Clamp(canTargetPos.y + (mouseY * lookUpSpeed * Time.deltaTime), canTargetMinHeight, canTargetMaxHeight);
         canTarget.localPosition = canTargetPos;
+    }
+    void PlayerRollDodge()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !isRollDodge && !player.isDie && !isJump)
+        {
+            isRollDodge = true;
+            anim.SetTrigger("RollDodge");
+            player.currentStamina -= 20f;
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isRollDodge = false;
+        }
+    }
+    void Jump()
+    {
+        if (isJump) return;
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !isRollDodge && !player.isDie && !isJump)
+        {
+            isJump = true;
+            anim.SetTrigger("Jump");
+            player.currentStamina -= 20f;
+        }
+    }
+    public void Landing()
+    {
+        isJump = false;
     }
     public void SetCanMove(bool value)
     {

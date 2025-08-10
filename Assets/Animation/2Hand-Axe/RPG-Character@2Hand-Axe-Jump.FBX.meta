@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a8d3734aa31395d429baf713d8327f35
+guid: 9308eeddd49a21648a727fd5c885f7db
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable:
@@ -317,6 +317,9 @@ ModelImporter:
     second: RPG-Character-Mesh
   - first:
       1: 100208
+    second: 2Hand-Axe
+  - first:
+      1: 100210
     second: Exporter
   - first:
       4: 400000
@@ -632,6 +635,9 @@ ModelImporter:
     second: RPG-Character-Mesh
   - first:
       4: 400208
+    second: 2Hand-Axe
+  - first:
+      4: 400210
     second: Exporter
   - first:
       23: 2300000
@@ -649,6 +655,9 @@ ModelImporter:
       23: 2300008
     second: USP
   - first:
+      23: 2300010
+    second: 2Hand-Axe
+  - first:
       33: 3300000
     second: Mesh_Soldier_A
   - first:
@@ -663,6 +672,9 @@ ModelImporter:
   - first:
       33: 3300008
     second: USP
+  - first:
+      33: 3300010
+    second: 2Hand-Axe
   - first:
       43: 4300000
     second: Mesh_Soldier_A
@@ -685,11 +697,14 @@ ModelImporter:
       43: 4300012
     second: RPG-Character-Mesh
   - first:
+      43: 4300014
+    second: 2Hand-Axe
+  - first:
       74: 7400000
-    second: Unarmed-Jump
+    second: 2Hand-Axe-Jump
   - first:
       74: 7400002
-    second: Unarmed-Land
+    second: 2Hand-Axe-Land
   - first:
       95: 9500000
     second: //RootNode
@@ -724,9 +739,19 @@ ModelImporter:
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
       to improve retargeting quality.\n\t'B_Spine' has translation animation that
-      will be discarded.\n"
-    animationRetargetingWarnings: 
-    animationDoRetargetingWarnings: 0
+      will be discarded.\n\t'B_Neck' has translation animation that will be discarded.\n"
+    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tLeftUpperArm
+      average position error 3.1 mm and maximum position error 4.9 mm at time 0:15
+      (83.3%) Frame 15\n\tLeftLowerArm average position error 3.1 mm and maximum
+      position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tLeftHand average position
+      error 3.1 mm and maximum position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tRightUpperArm
+      average position error 3.1 mm and maximum position error 4.9 mm at time 0:15
+      (83.3%) Frame 15\n\tRightLowerArm average position error 3.1 mm and maximum
+      position error 4.9 mm at time 0:16 (88.9%) Frame 16\n\tRightHand average position
+      error 3.1 mm and maximum position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tHead
+      average position error 3.1 mm and maximum position error 4.9 mm at time 0:16
+      (88.9%) Frame 16\n"
+    animationDoRetargetingWarnings: 1
     importAnimatedCustomProperties: 0
     importConstraints: 0
     animationCompression: 3
@@ -738,11 +763,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Unarmed-Jump
+      name: 2Hand-Axe-Jump
       takeName: Take 001
       internalID: 7400000
       firstFrame: 1
-      lastFrame: 20
+      lastFrame: 18
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -762,7 +787,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 1
+      - time: 0.99452055
         functionName: Landing
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -771,7 +796,7 @@ ModelImporter:
         messageOptions: 0
       transformMask: []
       maskType: 3
-      maskSource: {fileID: 101100000, guid: 3e4e408fdcc93ee468a1275b69104d63, type: 2}
+      maskSource: {fileID: 101100000, guid: 4ebc95c8618479f4d8251c7dafa10029, type: 2}
       additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
@@ -780,7 +805,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
-    sortHierarchyByName: 1
+    sortHierarchyByName: 0
     importPhysicalCameras: 1
     importVisibility: 0
     importBlendShapes: 0

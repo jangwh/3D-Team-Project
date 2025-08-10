@@ -1,3 +1,4 @@
+using RPGCharacterAnims.Actions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
             player.currentStamina = 0;
             isGuard = false;
             isAttacking = false;
+            characterControllerMove.isJump = false;
             return;
         }
         HandleWeaponSwap();
@@ -98,7 +100,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void Guard()
     {
-        if(Input.GetKeyDown(KeyCode.R) && !isGuard && !player.isDie)
+        if(Input.GetKeyDown(KeyCode.R) && !isGuard && !player.isDie && !characterControllerMove.isJump)
         {
             anim.SetLayerWeight(1, 1f);
             isGuard = true;
@@ -114,7 +116,11 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void HandleAttackInput()
     {
-        if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie)
+        if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie && characterControllerMove.isJump)
+        {
+            anim.SetTrigger("JumpAttack");
+        }
+        if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie && !characterControllerMove.isJump)
         {
             if (!isAttacking)
             {
@@ -127,7 +133,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
                 inputBufferTimer = comboInputBufferTime;
             }
         }
-        if (Input.GetMouseButtonDown(1) && !isGuard && !player.isDie)
+        if (Input.GetMouseButtonDown(1) && !isGuard && !player.isDie && !characterControllerMove.isJump)
         {
             if (!isAttacking)
             {
@@ -223,6 +229,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
     public void OnGuardBoxActive()
     {
         StartCoroutine(GuardOn());
+    }
+    public void OnJumpAttackEnd()
+    {
+        anim.ResetTrigger("JumpAttack");
     }
     void UpdateInputBuffer()
     {

@@ -180,8 +180,10 @@ MonoBehaviour:
   rotateSpeed: 0
   lastAttackTime: 0
   attackInterval: 0
+  playerLockOn: {fileID: 5623254546992856041}
   MaxStamina: 100
   currentStamina: 0
+  isDie: 0
 --- !u!114 &5623254546992856041
 MonoBehaviour:
   m_ObjectHideFlags: 0

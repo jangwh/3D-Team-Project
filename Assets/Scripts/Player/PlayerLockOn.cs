@@ -17,7 +17,6 @@ public class PlayerLockOn : MonoBehaviour
     private int targetIndex = 0;
     private bool isLockedOn = false;
     private GameObject lockOnMarker;
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))

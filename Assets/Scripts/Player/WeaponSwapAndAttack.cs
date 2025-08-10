@@ -98,7 +98,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void Guard()
     {
-        if(Input.GetKeyDown(KeyCode.R) && !isGuard)
+        if(Input.GetKeyDown(KeyCode.R) && !isGuard && !player.isDie)
         {
             anim.SetLayerWeight(1, 1f);
             isGuard = true;
@@ -114,7 +114,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void HandleAttackInput()
     {
-        if (Input.GetMouseButtonDown(0) && !isGuard)
+        if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie)
         {
             if (!isAttacking)
             {
@@ -127,7 +127,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
                 inputBufferTimer = comboInputBufferTime;
             }
         }
-        if (Input.GetMouseButtonDown(1) && !isGuard)
+        if (Input.GetMouseButtonDown(1) && !isGuard && !player.isDie)
         {
             if (!isAttacking)
             {

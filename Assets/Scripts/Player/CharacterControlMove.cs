@@ -63,7 +63,7 @@ public class CharacterControllerMove : MonoBehaviour
     }
     void PlayerRollDodge() 
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isRollDodge)
+        if (Input.GetKeyDown(KeyCode.Space) && !isRollDodge && !player.isDie)
         {
             isRollDodge = true;
             anim.SetTrigger("RollDodge");

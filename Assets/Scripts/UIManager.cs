@@ -45,6 +45,13 @@ public class UIManager : MonoBehaviour
         backHpBar.fillAmount = maxHp;
         backSteminaBar.fillAmount = maxStamina;
     }
+    public void TakeHp(float hp)
+    {
+        currentHp -= hp;
+        float newHpRatio = currentHp / maxHp;
+
+        frontHpBar.fillAmount = newHpRatio;
+    }
     public void TakeStemina(float stamina)
     {
         currentStamina -= stamina;

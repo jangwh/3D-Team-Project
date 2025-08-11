@@ -2,6 +2,7 @@ using RPGCharacterAnims.Actions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponSwapAndAttack : MonoBehaviour
@@ -23,12 +24,12 @@ public class WeaponSwapAndAttack : MonoBehaviour
 
     [Header("References")]
     public CharacterControllerMove characterControllerMove; // 이동 제어 스크립트 참조
+    public PlayerLockOn playerLockOn;
     private Animator anim;
 
     public float comboInputBufferTime = 0.5f;
 
     public Collider GuardBox;
-
 
     private int currentComboIndex = 0;
     [HideInInspector]public bool isAttacking = false;
@@ -38,6 +39,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
 
     private int currentWeaponIndex = 0;
 
+    public CapsuleCollider playerCollider;
 
     void Awake()
     {
@@ -75,7 +77,6 @@ public class WeaponSwapAndAttack : MonoBehaviour
             Guard();
         }
     }
-
     void HandleWeaponSwap()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -268,6 +269,29 @@ public class WeaponSwapAndAttack : MonoBehaviour
         {
             characterControllerMove.isBattle = false;
         }
+    }
+    void OnTriggerStay(Collider other)
+    {
+        if (playerLockOn != null &&
+        playerLockOn.currentTarget != null &&
+        playerLockOn.currentTarget.StunCollider != null &&
+        playerLockOn.currentTarget.StunCollider.enabled)
+        {
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                StartCoroutine(SpecialAttack());
+                other.gameObject.GetComponent<EnemyTarget>().TakeDamage(150);
+                playerLockOn.currentTarget.isStun = false;
+            }
+        }
+    }
+    IEnumerator SpecialAttack()
+    {
+        playerCollider.enabled = false;
+        anim.SetTrigger("SpecialAttack");
+        print("특수공격");
+        yield return new WaitForSeconds(1f);
+        playerCollider.enabled = true;
     }
     IEnumerator HitOn()
     {

@@ -13,7 +13,7 @@ public class PlayerLockOn : MonoBehaviour
     public GameObject lockOnMarkerPrefab;
 
     private List<EnemyTarget> enemies = new List<EnemyTarget>();
-    private EnemyTarget currentTarget;
+    [HideInInspector]public EnemyTarget currentTarget;
     private int targetIndex = 0;
     private bool isLockedOn = false;
     private GameObject lockOnMarker;

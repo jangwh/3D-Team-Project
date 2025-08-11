@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 425583219}
   - component: {fileID: 425583218}
   - component: {fileID: 425583223}
+  - component: {fileID: 425583224}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -353,6 +354,8 @@ MonoBehaviour:
   lastAttackTime: 0
   attackInterval: 0
   lockOnPoint: {fileID: 2027350524}
+  StunCollider: {fileID: 425583224}
+  isStun: 0
 --- !u!54 &425583223
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -380,6 +383,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &425583224
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425583217}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1.0000001
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: -1}
 --- !u!1 &462243798
 GameObject:
   m_ObjectHideFlags: 0

@@ -180,7 +180,6 @@ MonoBehaviour:
   rotateSpeed: 0
   lastAttackTime: 0
   attackInterval: 0
-  playerLockOn: {fileID: 5623254546992856041}
   MaxStamina: 100
   currentStamina: 0
   isDie: 0
@@ -204,6 +203,7 @@ MonoBehaviour:
   CameraTarget: {fileID: 1328938500651347668}
   virtualCamera: {fileID: 0}
   lockOnMarkerPrefab: {fileID: 3504684738772087177, guid: 3aa836e821ca7c247bed8467a465e847, type: 3}
+  currentTarget: {fileID: 0}
 --- !u!114 &8115118011066930593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,9 +249,11 @@ MonoBehaviour:
     - 2Hand-Axe-Attack6
     - 2Hand-Axe-Attack4
   characterControllerMove: {fileID: 6380526443151770293}
+  playerLockOn: {fileID: 5623254546992856041}
   comboInputBufferTime: 0.5
   GuardBox: {fileID: 8618062219087645878}
   isAttacking: 0
+  playerCollider: {fileID: 2002443122711835415}
 --- !u!114 &6380526443151770293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +270,7 @@ MonoBehaviour:
   moveSpeed: 1
   sprintSpeed: 3
   isBattle: 0
+  isJump: 0
   turnSpeed: 180
   canTarget: {fileID: 1328938500651347668}
   lookUpSpeed: 60

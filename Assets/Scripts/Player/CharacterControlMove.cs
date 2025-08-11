@@ -46,6 +46,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             player.currentStamina = 0;
             isRollDodge = false;
+            isJump = false;
             return;
         }
         PlayerRollDodge();
@@ -55,7 +56,8 @@ public class CharacterControllerMove : MonoBehaviour
     {
         if (player.currentStamina < player.MaxStamina)
         {
-            player.currentStamina += 10 * Time.deltaTime;
+            UIManager.Instance.TakeStemina(-5 * Time.deltaTime);
+            player.currentStamina += 5 * Time.deltaTime;
         }
         else if (player.currentStamina >= player.MaxStamina)
         {
@@ -107,10 +109,6 @@ public class CharacterControllerMove : MonoBehaviour
             anim.SetFloat("YDir", z);
             anim.SetFloat("Speed", rawSpeed);
         }
-        if(currentSpeed >= 1)
-        {
-            player.currentStamina -= 0.1f * Time.deltaTime;
-        }
     }
     void MosueMove()
     {
@@ -134,6 +132,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             isRollDodge = true;
             anim.SetTrigger("RollDodge");
+            UIManager.Instance.TakeStemina(20);
             player.currentStamina -= 20f;
         }
         if (Input.GetKeyUp(KeyCode.Space))
@@ -148,6 +147,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             isJump = true;
             anim.SetTrigger("Jump");
+            UIManager.Instance.TakeStemina(20);
             player.currentStamina -= 20f;
         }
     }

@@ -106,6 +106,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
             anim.SetLayerWeight(1, 1f);
             isGuard = true;
             anim.SetTrigger("Guard");
+            UIManager.Instance.TakeStemina(3);
             player.currentStamina -= 3;
             
         }
@@ -119,6 +120,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie && characterControllerMove.isJump)
         {
+            UIManager.Instance.TakeStemina(5);
+            player.currentStamina -= 5;
             anim.SetTrigger("JumpAttack");
         }
         if (Input.GetMouseButtonDown(0) && !isGuard && !player.isDie && !characterControllerMove.isJump)
@@ -166,6 +169,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         if (currentComboIndex < comboList.Count)
         {
             anim.Play(comboList[currentComboIndex], 0, 0f);
+            UIManager.Instance.TakeStemina(5);
             player.currentStamina -= 5;
         }
         else
@@ -180,6 +184,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         if (currentComboIndex < comboList.Count)
         {
             anim.Play(comboList[currentComboIndex], 0, 0f);
+            UIManager.Instance.TakeStemina(10);
             player.currentStamina -= 10;
         }
         else
@@ -280,6 +285,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.K))
             {
                 StartCoroutine(SpecialAttack());
+                UIManager.Instance.TakeStemina(5);
+                player.currentStamina -= 5;
                 other.gameObject.GetComponent<EnemyTarget>().TakeDamage(150);
                 playerLockOn.currentTarget.isStun = false;
             }

@@ -267,8 +267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 44330562751277374}
-  moveSpeed: 1
-  sprintSpeed: 3
+  moveSpeed: 3
+  sprintSpeed: 7
   isBattle: 0
   isJump: 0
   turnSpeed: 180

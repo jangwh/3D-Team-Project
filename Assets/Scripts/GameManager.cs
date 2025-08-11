@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     {
         var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
         SetPlayerReferences(spawnedPlayer);
+        player = spawnedPlayer.GetComponent<Player>();
     }
     void Update()
     {

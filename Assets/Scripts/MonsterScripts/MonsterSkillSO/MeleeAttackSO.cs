@@ -6,6 +6,7 @@ public class MeleeAttackSO : AttackPatternSO
 {
     public override void Execute(Monster monster, Transform target, Transform firePoint = null)
     {
-        monster.GetComponent<MonsterHitboxController>()?.ActivateHitboxes(hitboxNames, attackDuration, damage);
+        float finalDamage = monster.damage * damageMultiplier;
+        monster.GetComponent<MonsterHitboxController>()?.ActivateHitboxes(hitboxNames, attackDuration, finalDamage);
     }
 }

@@ -5,14 +5,13 @@ using UnityEngine;
 public abstract class AttackPatternSO : ScriptableObject //몬스터 패턴의 기반이 될 스크립트입니다.
 {
     [Header("공통 공격 설정")]
-    public float damage = 10f;
+    public float damageMultiplier = 1f;
     public float attackRange = 2f;
     public float attackCooldown = 2f;
 
     [Header("딜레이 설정")]
     public float preAttackDelay = 0.5f;
     public float attackDuration = 0.5f;
-    public float postAttackDelay = 0.5f;
 
     [Header("공격에 사용할 히트박스")]
     public List<string> hitboxNames;

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218f7ef126130f94693dfa96dd4f3763, type: 3}
   m_Name: WolfAttack2
   m_EditorClassIdentifier: 
-  damage: 10
-  attackRange: 10
+  damageMultiplier: 1
+  attackRange: 4
   attackCooldown: 3
-  preAttackDelay: 1
-  attackDuration: 1
-  postAttackDelay: 1
-  hitboxNames: []
+  preAttackDelay: 0.5
+  attackDuration: 1.5
+  hitboxNames:
+  - Body
   attackAnimationTrigger: Attack2

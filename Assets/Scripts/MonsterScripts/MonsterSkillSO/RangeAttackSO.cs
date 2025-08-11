@@ -19,7 +19,8 @@ public class RangeAttackSO : AttackPatternSO
 
         if (projectile != null)
         {
-            projectile.SetTarget(target, damage);
+            float finalDamage = monster.damage * damageMultiplier;
+            projectile.SetTarget(target, finalDamage);
         }
         
     }

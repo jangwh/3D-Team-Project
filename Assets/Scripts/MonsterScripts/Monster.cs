@@ -68,7 +68,11 @@ public class Monster : Character
             currentState = MonsterIdleState.Idle;
         }
 
-        rigid.isKinematic = true;
+        rigid.isKinematic = false;
+        rigid.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        navMeshAgent.updatePosition = false;
+        navMeshAgent.updateRotation = true;
+
         navMeshAgent.speed = moveSpeed;
         navMeshAgent.angularSpeed = rotateSpeed;
     }
@@ -86,8 +90,13 @@ public class Monster : Character
             PerformInitialStateBehavior();
         }
 
+        if (navMeshAgent.isOnNavMesh && !isAttacking)
+        {
+            rigid.velocity = navMeshAgent.velocity;
+        }
+
         //애니메이션 업데이트 로직
-        CurrentSpeed = navMeshAgent.velocity.magnitude;
+        CurrentSpeed = rigid.velocity.magnitude;
         animator.SetFloat("Speed", CurrentSpeed);
         
     }
@@ -103,20 +112,11 @@ public class Monster : Character
         //플레이어가 없거나, 공격패턴이 없거나, *공격 중* 이면 이동,회전 로직 중단!
 
         AttackPatternSO currentAttack = attackPatterns[currentAttackIndex];
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        navMeshAgent.stoppingDistance = currentAttack.attackRange;
+        navMeshAgent.SetDestination(player.position);
 
-        if (distanceToPlayer > currentAttack.attackRange)
+        if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
         {
-            if (navMeshAgent.isStopped) navMeshAgent.isStopped = false;
-            navMeshAgent.SetDestination(player.position);
-        }
-        else
-        {
-            if (!navMeshAgent.isStopped) 
-            {
-                navMeshAgent.isStopped = true;
-            }
-
             Vector3 direction = (player.position - transform.position).normalized;
             direction.y = 0;
             if (direction != Vector3.zero)
@@ -166,6 +166,7 @@ public class Monster : Character
     {
         currentAttackIndex = (currentAttackIndex + 1) % attackPatterns.Count;
         isAttacking = false;
+        navMeshAgent.isStopped = false;
         Debug.Log("애니메이션 이벤트: 공격 종료!");
 
         ////쿨타임 디버그 라인입니다.

@@ -16,7 +16,7 @@ public class PlayerLockOn : MonoBehaviour
     [HideInInspector]public EnemyTarget currentTarget;
     private int targetIndex = 0;
     private bool isLockedOn = false;
-    private GameObject lockOnMarker;
+    [HideInInspector]public GameObject lockOnMarker;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))

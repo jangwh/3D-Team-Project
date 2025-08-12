@@ -11,8 +11,9 @@ public class UIManager : MonoBehaviour
     public Image backHpBar;
 
     public Image frontSteminaBar;
-    public Image backSteminaBar; 
+    public Image backSteminaBar;
 
+    public GameObject GameOver;
 
     float maxHp;
     float currentHp;

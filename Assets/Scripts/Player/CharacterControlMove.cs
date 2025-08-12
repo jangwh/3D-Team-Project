@@ -38,6 +38,7 @@ public class CharacterControllerMove : MonoBehaviour
     }
     void Update()
     {
+        if (player.isDie) return;
         if (!canMove) return;
         MosueMove();
         PlayerMove();
@@ -56,8 +57,16 @@ public class CharacterControllerMove : MonoBehaviour
     {
         if (player.currentStamina < player.MaxStamina)
         {
-            UIManager.Instance.TakeStemina(-5 * Time.deltaTime);
-            player.currentStamina += 5 * Time.deltaTime;
+            if (isBattle) 
+            {
+                UIManager.Instance.TakeStemina(-5 * Time.deltaTime);
+                player.currentStamina += 5 * Time.deltaTime;
+            }
+            else
+            {
+                UIManager.Instance.TakeStemina(-15 * Time.deltaTime);
+                player.currentStamina += 15 * Time.deltaTime;
+            }
         }
         else if (player.currentStamina >= player.MaxStamina)
         {

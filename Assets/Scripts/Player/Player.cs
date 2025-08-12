@@ -45,5 +45,6 @@ public class Player : Character
     {
         yield return new WaitForSeconds(1f);
         LeanPool.Despawn(this);
+        UIManager.Instance.GameOver.SetActive(true);
     }
 }

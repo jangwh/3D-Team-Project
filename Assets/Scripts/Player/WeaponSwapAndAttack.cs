@@ -60,6 +60,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void Update()
     {
+        if (player.isDie) return;
         if (player.currentStamina <= 0)
         {
             player.currentStamina = 0;

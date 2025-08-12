@@ -33,11 +33,16 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+        Invoke("Revive", 1.5f);
+    }
+    void Revive()
+    {
         if (player.isDie && Input.anyKeyDown)
         {
-            player.Init();
+            UIManager.Instance.GameOver.SetActive(false);
             var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
             SetPlayerReferences(spawnedPlayer);
+            player.Init();
         }
     }
     void SetPlayerReferences(Player playerObj)

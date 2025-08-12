@@ -79,6 +79,11 @@ public class Monster : Character
 
     void Update()
     {
+        if (navMeshAgent.isOnNavMesh)
+        {
+            navMeshAgent.nextPosition = transform.position;
+        }
+
         CheckForPlayer(); //지속적으로 추적상태 업데이트
 
         if (isChasing)

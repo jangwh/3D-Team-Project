@@ -32,6 +32,10 @@ public class Player : Character
         {
             isDie = true;
             anim.SetTrigger("Die");
+            if(GameManager.Instance.playerLockOn.lockOnMarker != null)
+            {
+                Destroy(GameManager.Instance.playerLockOn.lockOnMarker);
+            }
             StartCoroutine(DieAnimation());
         }
     }

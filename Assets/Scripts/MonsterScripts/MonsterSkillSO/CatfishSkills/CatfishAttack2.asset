@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CatfishAttack2
   m_EditorClassIdentifier: 
   damageMultiplier: 1
-  attackRange: 1.5
+  attackRange: 2
   attackCooldown: 2
   preAttackDelay: 0.3
   attackDuration: 0.6

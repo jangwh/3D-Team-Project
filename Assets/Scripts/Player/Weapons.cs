@@ -1,4 +1,4 @@
-using RPGCharacterAnims.Lookups;
+ï»¿using RPGCharacterAnims.Lookups;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,9 +12,9 @@ public class Weapons : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            EnemyTarget enemy = other.GetComponent<EnemyTarget>();
+            Character enemy = other.GetComponentInParent<Character>();
             enemy.TakeDamage(weapondamage);
-            print("µ¥¹ÌÁöÀÔÈû");
+            print("ë°ë¯¸ì§€ì…í˜");
         }
     }
 }

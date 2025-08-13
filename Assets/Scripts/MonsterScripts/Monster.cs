@@ -4,8 +4,9 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Lean.Pool;
 
-public class Monster : Character
+public class Monster : Character, IPoolable
 {
     public enum MonsterIdleState //몬스터의 Idle 상태 2가지
     {
@@ -22,6 +23,7 @@ public class Monster : Character
     [Header("순찰 설정")]
     public Transform[] patrolPoints; // 순찰 지점들
     public float patrolWaitTime = 2f;
+    
 
     [Header("플레이어 추적 설정")]
     public float detectionRadius = 10f; // 플레이어를 감지할 반경
@@ -42,7 +44,9 @@ public class Monster : Character
     private bool isWaiting = false;
     private bool isAttacking = false;
     private float CurrentSpeed;
-    
+    private bool isDie = false;
+    private Vector3 initialPosition;
+    private bool isStun = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
@@ -53,6 +57,7 @@ public class Monster : Character
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        initialPosition = transform.position;
 
         foreach (var pattern in attackPatterns)
         {
@@ -80,31 +85,106 @@ public class Monster : Character
 
     void Update()
     {
-        if (navMeshAgent.isOnNavMesh)
+        if (!isDie && !isStun) //죽은 상태나 기절 상태가 아니면, 움직인다.
         {
-            navMeshAgent.nextPosition = transform.position;
-        }
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.nextPosition = transform.position;
+            }
 
-        CheckForPlayer(); //지속적으로 추적상태 업데이트
+            CheckForPlayer(); //지속적으로 추적상태 업데이트
 
-        if (isChasing)
-        {
-            ChaseAndAttackPlayer();
-        }
-        else
-        {
-            PerformInitialStateBehavior();
-        }
+            if (isChasing)
+            {
+                ChaseAndAttackPlayer();
+            }
+            else
+            {
+                PerformInitialStateBehavior();
+            }
 
-        if (navMeshAgent.isOnNavMesh && !isAttacking)
-        {
-            rigid.velocity = navMeshAgent.velocity;
-        }
+            if (navMeshAgent.isOnNavMesh && !isAttacking)
+            {
+                rigid.velocity = navMeshAgent.velocity;
+            }
 
-        //애니메이션 업데이트 로직
-        CurrentSpeed = rigid.velocity.magnitude;
-        animator.SetFloat("Speed", CurrentSpeed);
+            //애니메이션 업데이트 로직
+            CurrentSpeed = rigid.velocity.magnitude;
+            animator.SetFloat("Speed", CurrentSpeed);
+
+            if (currentHp/maxHp <= 0.5f)
+            {
+                Stun();
+            }
+
+            if (currentHp <= 0)
+            {
+                Die();
+            }
+        }
         
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        isDie = true;
+        animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
+    }
+
+    public void Stun()
+    {
+
+    }
+
+    public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
+    {
+        SpawnItem();
+        LeanPool.Despawn(this); //TODO : ObjectManager.cs에 몬스터 등록하는 로직 필요
+    }
+
+    public void SpawnItem()
+    {
+        //아이템 소환 로직
+    }
+
+    public void OnSpawn() //인스펙터에서 설정한 값을 그대로 불러옵니다. //Leanpool로 
+    {
+        //체력 리필 
+        currentHp = maxHp;
+
+        //초기 위치로 초기화
+        transform.position = initialPosition;
+        navMeshAgent.Warp(initialPosition);
+
+        //상태 초기화
+        isDie = false;
+        isChasing = false;
+        isAttacking = false;
+        isWaiting = false;
+
+        //NavMeshAgent 초기화
+        navMeshAgent.isStopped = false;
+        navMeshAgent.ResetPath();
+
+        //애니메이션 초기화
+        animator.Rebind();
+        animator.Update(0f);
+
+        //공격 쿨타임 초기화
+        foreach(var pattern in attackPatterns)
+        {
+            attackCooldowns[pattern] = -999f;
+        }
+    }
+
+    public void OnDespawn()
+    {
     }
 
     public void SetIsAttacking(bool status) //콤보 공격시 사용예정
@@ -288,4 +368,6 @@ public class Monster : Character
             Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
         }
     }
+
+    
 }

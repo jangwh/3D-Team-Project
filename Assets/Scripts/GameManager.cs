@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
             UIManager.Instance.GameOver.SetActive(false);
             var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
             SetPlayerReferences(spawnedPlayer);
+            UIManager.Instance.frontHpBar.fillAmount = 1;
+            UIManager.Instance.frontSteminaBar.fillAmount = 1;
             player.Init();
         }
     }

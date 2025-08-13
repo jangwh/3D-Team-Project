@@ -13,6 +13,13 @@ public class GameManager : MonoBehaviour
     public Transform RespawnPos;
     public CinemachineVirtualCamera CinemachineVirtualCamera;
 
+    public GameObject town;
+    public GameObject ruin;
+    public GameObject forest;
+    public GameObject gorge;
+    
+    public MiniMap minimap;
+
     void Awake()
     {
         if (Instance == null)
@@ -39,10 +46,16 @@ public class GameManager : MonoBehaviour
     {
         if (player.isDie && Input.anyKeyDown)
         {
+            town.SetActive(true);
             UIManager.Instance.GameOver.SetActive(false);
             var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
+            
             SetPlayerReferences(spawnedPlayer);
             player.Init();
+            minimap.isTown = true;
+            ruin.SetActive(false);
+            forest.SetActive(false);
+            gorge.SetActive(false);
         }
     }
     void SetPlayerReferences(Player playerObj)

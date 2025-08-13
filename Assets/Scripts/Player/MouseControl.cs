@@ -5,27 +5,36 @@ using UnityEngine;
 public class MouseControl : MonoBehaviour
 {
     public static bool isFocused;
+    public bool isStoreOn;
 
     void Start()
     {
-        //Application.isFocused  : ÇöÀç Ã¢ÀÌ Æ÷Ä¿½º µÇ¾îÀÖ´ÂÁö ¿©ºÎ
-        //À¯´ÏÆ¼ ¿¡µðÅÍ¿¡¼­´Â Game Ã¢À» Å¬¸¯ÇÏ¸é Focus, escÅ°¸¦ ´©¸£¸é Focus false
+        //Application.isFocused  : ï¿½ï¿½ï¿½ï¿½ Ã¢ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½Í¿ï¿½ï¿½ï¿½ï¿½ï¿½ Game Ã¢ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ Focus, escÅ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Focus false
         OnApplicationFocus(true);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (isStoreOn)
         {
             OnApplicationFocus(false);
         }
-        else if (Input.anyKeyDown)
+
+        else if (!isStoreOn)
         {
-            OnApplicationFocus(true);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                OnApplicationFocus(false);
+            }
+            else if (Input.anyKeyDown)
+            {
+                OnApplicationFocus(true);
+            }
         }
     }
 
-    //onApplicationFocus : °ÔÀÓ ÇÁ·Î¼¼½º°¡ os¿¡¼­ Æ÷Ä¿½º µÇ°Å³ª Æ÷Ä¿½º¿¡¼­ ¹þ¾î³¯ °æ¿ì È£Ãâ, ÆÄ¶ó¹ÌÅÍ·Î onÀÎÁö offÀÎÁö Àü´Þ
+    //onApplicationFocus : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ï¿½ï¿½ osï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½Ç°Å³ï¿½ ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ ï¿½ï¿½ï¿½ È£ï¿½ï¿½, ï¿½Ä¶ï¿½ï¿½ï¿½Í·ï¿½ onï¿½ï¿½ï¿½ï¿½ offï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     void OnApplicationFocus(bool focus)
     {
         isFocused = focus;

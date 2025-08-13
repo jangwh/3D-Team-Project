@@ -14,6 +14,7 @@ public class DamageOnTrigger : MonoBehaviour //이 스크립트는 각각의 히
         if (target != null && !hittedTargets.Contains(target))
         {
             Debug.Log($"{target.name}이(가) {gameObject.name} 공격에 맞음! 데미지: {damage}");
+            UIManager.Instance.TakeHp(damage);
             target.TakeDamage(damage);
             hittedTargets.Add(target);
         }

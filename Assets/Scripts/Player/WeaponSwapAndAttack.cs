@@ -41,6 +41,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
     private int currentWeaponIndex = 0;
 
     public CapsuleCollider playerCollider;
+    
+    private MouseControl mouseControl;
 
     void Awake()
     {
@@ -58,9 +60,12 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         anim.SetLayerWeight(1, 0);
         SetWeapon(currentWeaponIndex);
+        
+        mouseControl = FindObjectOfType<MouseControl>();
     }
     void Update()
     {
+        if (mouseControl.isStoreOn) return;
         if (player.isDie) return;
         if (player.currentStamina <= 0)
         {

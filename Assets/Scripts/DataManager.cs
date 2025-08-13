@@ -29,7 +29,8 @@ public class DataManager : MonoBehaviour
 
     public List<ItemData> itemDatas;
 
-    public string SaveFilePath => $"{Application.dataPath}/{saveFileName}.json";
+    // Use persistentDataPath for save file location
+    public string SaveFilePath => $"{Application.persistentDataPath}/{saveFileName}.json";
     void Awake()
     {
         Instance = this;
@@ -53,25 +54,40 @@ public class DataManager : MonoBehaviour
     }
     public void Load()
     {
-        FileData save;
+        FileData save = null;
         try
         {
             string json = File.ReadAllText(SaveFilePath);
             save = JsonUtility.FromJson<FileData>(json);
         }
-        catch
+        catch (System.Exception ex)
         {
-            print("save 파일이 없음.");
+            Debug.Log($"Failed to load save file: {ex.Message}\n{ex.StackTrace}");
             return;
         }
 
-        InventoryManager.Items.AddRange(save.items);
-        InventoryManager.Items.AddRange(save.consumables);
+        // Clear current inventory before loading
+        InventoryManager.Items.Clear();
+        if (save != null)
+        {
+            InventoryManager.Items.AddRange(save.items);
+            InventoryManager.Items.AddRange(save.consumables);
+        }
 
         foreach (ItemStatus item in InventoryManager.Items)
         {
             item.Data = itemDatas.Find(x => x.uid == item.uid);
         }
-        InventoryManager.Refresh();
+
+        // Update UI directly and refresh MyItems UI after loading
+        var myItems = FindObjectOfType<MyItems>();
+        if (myItems != null)
+        {
+            myItems.Refresh(InventoryManager.Items);
+        }
+        else
+        {
+            InventoryManager.Refresh();
+        }
     }
 }

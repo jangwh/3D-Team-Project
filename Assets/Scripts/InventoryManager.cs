@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    private List<ItemStatus> items = new List<ItemStatus>(); //º¸À¯ÁßÀÎ ¾ÆÀÌÅÛ ¸®½ºÆ®
+    private List<ItemStatus> items = new List<ItemStatus>(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
     public static InventoryManager Instance { get; private set; }
     public static List<ItemStatus> Items => Instance.items;
+    public List<ItemStatus> inventory = new List<ItemStatus>();
 
-    public ItemSlot focusedSlot; //¸¶¿ì½º°¡ ¿Ã¶ó°£ ½½·Ô
-    public ItemSlot selectedSlot; //µå·¡±×¸¦ ½ÃÀÛÇÑ ½½·Ô
+    public ItemSlot focusedSlot; //ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public ItemSlotStore focusedSlotStore;
+    public ItemSlot selectedSlot; //ï¿½å·¡ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     void Awake()
     {
@@ -36,6 +38,14 @@ public class InventoryManager : MonoBehaviour
     {
         UIManager.Instance.Inventory.Refresh(Instance.items);
     }
+    public void AddItem(ItemStatus item)
+    {
+        if (item != null)
+        {
+            inventory.Add(item);
+            Debug.Log(item.Data.name + "ê°€ ì¸ë²¤í† ë¦¬ì— ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.");
+        }
+    }
     public static void Swap()
     {
         if (Instance.selectedSlot == null || Instance.focusedSlot == null) return;
@@ -43,6 +53,7 @@ public class InventoryManager : MonoBehaviour
 
         ItemStatus selectedItem = Instance.selectedSlot.Item;
         ItemStatus focusedItem = Instance.focusedSlot.Item;
+        ItemStatus focusedItemStore = Instance.focusedSlotStore.Item;
 
         int selectedIndex = Items.IndexOf(selectedItem);
         int focusedIndex = Items.IndexOf(focusedItem);
@@ -54,6 +65,6 @@ public class InventoryManager : MonoBehaviour
         Items[focusedIndex] = temp;
 
         Refresh();
-        print($"{Instance.selectedSlot.Item.Data.itemName}°ú {Instance.focusedSlot.Item.Data.itemName}À§Ä¡¸¦ ¹Ù²Ü ¿¹Á¤");
+        print($"{Instance.selectedSlot.Item.Data.itemName}ï¿½ï¿½ {Instance.focusedSlot.Item.Data.itemName}ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 }

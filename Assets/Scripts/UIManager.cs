@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
+    public static ItemTooltip Tooltip { get; private set; }
+    public static InventoryPannel Inventory { get; private set; }
 
     public Image frontHpBar;
     public Image backHpBar;
@@ -18,11 +20,11 @@ public class UIManager : MonoBehaviour
 
     public GameObject GameOver;
 
-    float maxHp;
-    float currentHp;
+    [HideInInspector]public float UImaxHp;
+    [HideInInspector]public float UIcurrentHp;
 
-    float maxStamina;
-    float currentStamina;
+    [HideInInspector]public float UImaxStamina;
+    [HideInInspector]public float UIcurrentStamina;
 
     void Awake()
     {
@@ -35,31 +37,30 @@ public class UIManager : MonoBehaviour
             DestroyImmediate(this);
             return;
         }
+        Tooltip = transform.Find("Tooltip").GetComponent<ItemTooltip>();
+        Inventory = transform.Find("Inventory").GetComponent<InventoryPannel>();
+    }
+    void Start()
+    {
+        Tooltip.Hide();
+        Inventory.gameObject.SetActive(false);
     }
     void Update()
     {
-        if (GameManager.Instance.player != null)
-        {
-            maxHp = GameManager.Instance.player.maxHp;
-            maxStamina = GameManager.Instance.player.MaxStamina;
-
-            currentHp = GameManager.Instance.player.currentHp;
-            currentStamina = GameManager.Instance.player.currentStamina;
-        }
         backHpBar.fillAmount = 1;
         backSteminaBar.fillAmount = 1;
     }
     public void TakeHp(float hp)
     {
-        currentHp -= hp;
-        float newHpRatio = currentHp / maxHp;
+        UIcurrentHp -= hp;
+        float newHpRatio = UIcurrentHp / UImaxHp;
 
         frontHpBar.fillAmount = newHpRatio;
     }
     public void TakeStemina(float stamina)
     {
-        currentStamina -= stamina;
-        float newSteminaRatio = currentStamina / maxStamina;
+        UIcurrentStamina -= stamina;
+        float newSteminaRatio = UIcurrentStamina / UImaxStamina;
 
         frontSteminaBar.fillAmount = newSteminaRatio;
     }

@@ -19,6 +19,11 @@ public class Player : Character
     {
         currentStamina = MaxStamina;
         base.Start();
+        UIManager.Instance.UImaxHp = maxHp; 
+        UIManager.Instance.UImaxStamina = MaxStamina;             
+        UIManager.Instance.UIcurrentHp = currentHp; 
+        UIManager.Instance.UIcurrentStamina = currentStamina;
+
     }
     public override void TakeDamage(float damage)
     {

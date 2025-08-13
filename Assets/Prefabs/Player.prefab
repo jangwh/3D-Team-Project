@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2991954211095428306
 Transform:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 6810603100783765472}
   - component: {fileID: 3742056488890998744}
   - component: {fileID: 2002443122711835415}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -223,6 +223,7 @@ MonoBehaviour:
     controllers: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
     weapon: {fileID: 405713131033290130}
     HitBox: {fileID: 1524554052440487049}
+    weaponSprite: {fileID: 21300000, guid: 0e8506626351cf149bc48ce47e86c018, type: 3}
     amberAttackComboAnimationNames:
     - Sword-Attack-R1
     - Sword-Attack-R2
@@ -235,12 +236,14 @@ MonoBehaviour:
     controllers: {fileID: 9100000, guid: feee081c478e5844d9f3acae3a3b392f, type: 2}
     weapon: {fileID: 0}
     HitBox: {fileID: 0}
+    weaponSprite: {fileID: 21300000, guid: 2a0820698c62beb4ca71441c3d129493, type: 3}
     amberAttackComboAnimationNames: []
     strongAttackComboAnimationNames: []
   - weaponName: Axe
     controllers: {fileID: 9100000, guid: ef20c8a5a49dd3a4dae52491fef2a5a8, type: 2}
     weapon: {fileID: 4260208348824658750}
     HitBox: {fileID: 384276810874341550}
+    weaponSprite: {fileID: 21300000, guid: 741cf3be42cfb424cab61915b7159bd5, type: 3}
     amberAttackComboAnimationNames:
     - 2Hand-Axe-Attack3
     - 2Hand-Axe-Attack2

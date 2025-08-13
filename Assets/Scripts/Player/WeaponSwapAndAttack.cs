@@ -14,6 +14,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         public RuntimeAnimatorController controllers;
         public GameObject weapon;
         public Collider HitBox;
+        public Sprite weaponSprite;
         [Header("Combo Settings")]
         public List<string> amberAttackComboAnimationNames = new List<string>() { };
         public List<string> strongAttackComboAnimationNames = new List<string>() { };
@@ -50,13 +51,13 @@ public class WeaponSwapAndAttack : MonoBehaviour
             Debug.LogError("무기 데이터가 비어 있습니다!");
             return;
         }
-        SetWeapon(currentWeaponIndex);
         weapons[currentWeaponIndex].HitBox.enabled = false;
         GuardBox.enabled = false;
     }
     void Start()
     {
         anim.SetLayerWeight(1, 0);
+        SetWeapon(currentWeaponIndex);
     }
     void Update()
     {
@@ -275,6 +276,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         {
             characterControllerMove.isBattle = false;
         }
+        UIManager.Instance.weaponImage.sprite = weapon.weaponSprite; 
     }
     void OnTriggerStay(Collider other)
     {

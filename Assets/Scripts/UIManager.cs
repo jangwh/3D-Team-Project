@@ -13,6 +13,9 @@ public class UIManager : MonoBehaviour
     public Image frontSteminaBar;
     public Image backSteminaBar;
 
+    public Image weaponImage;
+    public Image portionImage;
+
     public GameObject GameOver;
 
     float maxHp;
@@ -43,8 +46,8 @@ public class UIManager : MonoBehaviour
             currentHp = GameManager.Instance.player.currentHp;
             currentStamina = GameManager.Instance.player.currentStamina;
         }
-        backHpBar.fillAmount = maxHp;
-        backSteminaBar.fillAmount = maxStamina;
+        backHpBar.fillAmount = 1;
+        backSteminaBar.fillAmount = 1;
     }
     public void TakeHp(float hp)
     {

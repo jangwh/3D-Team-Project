@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    private List<ItemStatus> items = new List<ItemStatus>(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
+    private List<ItemStatus> items = new List<ItemStatus>(); //º¸À¯ÁßÀÎ ¾ÆÀÌÅÛ ¸®½ºÆ®
     public static InventoryManager Instance { get; private set; }
     public static List<ItemStatus> Items => Instance.items;
-    public List<ItemStatus> inventory = new List<ItemStatus>();
 
-    public ItemSlot focusedSlot; //ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ï¿½ï¿½
-    public ItemSlotStore focusedSlotStore;
-    public ItemSlot selectedSlot; //ï¿½å·¡ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public ItemSlot focusedSlot; //¸¶¿ì½º°¡ ¿Ã¶ó°£ ½½·Ô
+    public ItemSlot selectedSlot; //µå·¡±×¸¦ ½ÃÀÛÇÑ ½½·Ô
 
     void Awake()
     {
@@ -29,6 +27,26 @@ public class InventoryManager : MonoBehaviour
     {
         Refresh();
     }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Player player = FindObjectOfType<Player>();
+
+            // Ã¹ ¹øÂ° Æ÷¼Ç Ã£±â
+            ItemStatus potion = Items.Find(i => i is ConsumableStatus);
+            if (potion != null)
+            {
+                // Æ÷¼Ç »ç¿ë
+                UIManager.Instance.Inventory.PortionUse(potion);
+            }
+            else
+            {
+                // Æ÷¼ÇÀÌ ¾øÀ» ¶§ ¾Ö´Ï¸ŞÀÌ¼Ç
+                player.GetComponent<Animator>().SetTrigger("NoPotion");
+            }
+        }
+    }
     public static void PickupItem(ItemObject obj)
     {
         Instance.items.Add(obj.status);
@@ -37,13 +55,16 @@ public class InventoryManager : MonoBehaviour
     public static void Refresh()
     {
         UIManager.Instance.Inventory.Refresh(Instance.items);
-    }
-    public void AddItem(ItemStatus item)
-    {
-        if (item != null)
+
+        // Æ÷¼Ç ÀÌ¹ÌÁö ÀÚµ¿ °»½Å
+        ConsumableStatus potion = Items.Find(i => i is ConsumableStatus) as ConsumableStatus;
+        if (potion != null)
         {
-            inventory.Add(item);
-            Debug.Log(item.Data.name + "ê°€ ì¸ë²¤í† ë¦¬ì— ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.");
+            UIManager.Instance.portionImage.sprite = potion.Data.icon;
+        }
+        else
+        {
+            UIManager.Instance.portionImage.sprite = null;
         }
     }
     public static void Swap()
@@ -53,7 +74,6 @@ public class InventoryManager : MonoBehaviour
 
         ItemStatus selectedItem = Instance.selectedSlot.Item;
         ItemStatus focusedItem = Instance.focusedSlot.Item;
-        ItemStatus focusedItemStore = Instance.focusedSlotStore.Item;
 
         int selectedIndex = Items.IndexOf(selectedItem);
         int focusedIndex = Items.IndexOf(focusedItem);
@@ -65,6 +85,6 @@ public class InventoryManager : MonoBehaviour
         Items[focusedIndex] = temp;
 
         Refresh();
-        print($"{Instance.selectedSlot.Item.Data.itemName}ï¿½ï¿½ {Instance.focusedSlot.Item.Data.itemName}ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½");
+        print($"{Instance.selectedSlot.Item.Data.itemName}°ú {Instance.focusedSlot.Item.Data.itemName}À§Ä¡¸¦ ¹Ù²Ü ¿¹Á¤");
     }
 }

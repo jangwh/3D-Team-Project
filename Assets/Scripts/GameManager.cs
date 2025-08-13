@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject gorge;
     
     public MiniMap minimap;
+    public Material skyboxMaterial;
 
     void Awake()
     {
@@ -34,9 +35,11 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        RenderSettings.skybox = skyboxMaterial;
         var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
         SetPlayerReferences(spawnedPlayer);
         player = spawnedPlayer.GetComponent<Player>();
+
     }
     void Update()
     {

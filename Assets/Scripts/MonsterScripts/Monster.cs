@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +15,9 @@ public class Monster : Character, IPoolable
 
     [Header("원본 프리펩")] //몬스터 스폰할 때 사용합니다.
     public GameObject myPrefab;
+
+    [Header("UI설정")]
+    public Transform uIPoint;
 
     [Header("몬스터 설정")]
     public MonsterIdleState initialState = MonsterIdleState.Idle; // 초기 상태 (대기 또는 순찰)
@@ -42,18 +44,26 @@ public class Monster : Character, IPoolable
     private Animator animator;
     private int currentPatrolIndex = 0;   // 현재 순찰 지점 인덱스
     private MonsterIdleState currentState;    // 현재 몬스터의 행동 상태
+    private MonsterAudio monsterAudio;
 
     //현상태
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttacking = false;
     private float CurrentSpeed;
-    private bool isDie = false;
+    public bool isDie = false;
     private Vector3 initialPosition;
-    private bool isStun = false;
+    public bool isStun = false;
+    public bool isBoss = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
+    private int dropran;
+
+    [Header("체력회복 설정")]
+    public float healingAmount = 1f;
+    public float healingInterval = 0.5f;
+    private Coroutine healingCoroutine;
 
     void Awake()
     {
@@ -62,6 +72,7 @@ public class Monster : Character, IPoolable
         rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         initialPosition = transform.position;
+        monsterAudio = GetComponent<MonsterAudio>();
 
         foreach (var pattern in attackPatterns)
         {
@@ -84,11 +95,16 @@ public class Monster : Character, IPoolable
         navMeshAgent.updateRotation = true;
 
         navMeshAgent.speed = moveSpeed;
-        navMeshAgent.angularSpeed = rotateSpeed;
+        navMeshAgent.angularSpeed = rotateSpeed;        
     }
 
     void Update()
     {
+        if (!isDie && currentHp <= 0)
+        {
+            Die();
+        }
+
         if (!isDie && !isStun) //죽은 상태나 기절 상태가 아니면, 움직인다.
         {
             if (navMeshAgent.isOnNavMesh)
@@ -115,24 +131,62 @@ public class Monster : Character, IPoolable
             //애니메이션 업데이트 로직
             CurrentSpeed = rigid.velocity.magnitude;
             animator.SetFloat("Speed", CurrentSpeed);
-
-            if (currentHp <= 0)
-            {
-                Die();
-            }
-        }   
+        }
     }
 
-    public override void TakeDamage(float damage)
+    public void StartHealing()
     {
-        base.TakeDamage(damage);
+        if (healingCoroutine == null) 
+        {
+            StartCoroutine(Healing());
+        }
+    }
+
+    public void StopHealing()
+    {
+        if (healingCoroutine != null)
+        {
+            StopCoroutine(Healing());
+            healingCoroutine = null;
+        }    
+    }
+
+    private IEnumerator Healing()
+    {
+        while (currentHp < maxHp)
+        {
+            yield return new WaitForSeconds(healingInterval);
+            currentHp = Mathf.Min(maxHp, currentHp + healingAmount);
+        }
     }
 
     public override void Die()
     {
+        StopHealing();
+        if (isBoss)
+        {
+            BossHealthBar.Instance.HideBossUI();
+        }
+        else
+        {
+            MonsterHealthBarManager.Instance.HideHealthBar(this);
+        }
+        monsterAudio.PlayDeathSound();
         base.Die();
+        if (isDie) return;
         isDie = true;
+        if (isStun)
+        {
+            animator.SetBool("Stun", false);
+        }
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
+        SpawnItem();
+
+        if (isBoss)
+        {
+            GameClearCheck gameclear = GetComponent<GameClearCheck>();
+            gameclear.GameClear();
+        }
     }
 
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
@@ -143,7 +197,11 @@ public class Monster : Character, IPoolable
 
     public void SpawnItem()
     {
-        //아이템 소환 로직
+        dropran = Random.Range(0, 100);
+        if (dropran < 50)
+        {
+            Instantiate(DataManager.Instance.itemDatas[0].modelPrefab, transform.position, transform.rotation);
+        }
     }
 
     public void OnSpawn() //Leanpool spawn으로 소환시 상태를 초기화 하는 메서드입니다.
@@ -174,6 +232,8 @@ public class Monster : Character, IPoolable
         {
             attackCooldowns[pattern] = -999f;
         }
+
+        StopHealing();
     }
 
     public void Initialize(MonsterIdleState initialMode, Transform[] specificPatrolPoints)
@@ -246,7 +306,7 @@ public class Monster : Character, IPoolable
         attackCooldowns[currentAttack] = Time.time;
         
         yield return new WaitForSeconds(currentAttack.preAttackDelay); //선딜
-
+        monsterAudio.PlayAttackSound();
         currentAttack.Execute(this, player); //공격. 히트박스 컨트롤러를 통해서 공격 유지시간을 설정합니다
 
     }
@@ -330,7 +390,11 @@ public class Monster : Character, IPoolable
                 navMeshAgent.ResetPath();
 
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
-                
+                StartHealing();
+                if (!isBoss)
+                {
+                    MonsterHealthBarManager.Instance.HideHealthBar(this);
+                }
             }
         }
         else
@@ -342,8 +406,18 @@ public class Monster : Character, IPoolable
                 player = hitColliders[0].transform;
                 isChasing = true;
                 print("플레이어를 발견! 추적을 시작합니다.");
+                monsterAudio.PlayChaseSound();
                 animator.SetInteger("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
+                StopHealing();
+                if (isBoss)
+                {
+                    BossHealthBar.Instance.ShowBossUI(this);
+                }
+                else
+                {
+                    MonsterHealthBarManager.Instance.ShowHealthBar(this);
+                }
             }
         }
     }
@@ -373,6 +447,4 @@ public class Monster : Character, IPoolable
             Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
         }
     }
-
-    
 }

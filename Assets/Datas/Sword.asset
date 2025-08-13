@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e3def6dcf5e104c837f3d7e0c8603d, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+  uid: 102
+  itemType: 1
+  icon: {fileID: 0}
+  modelPrefab: {fileID: 0}
+  itemName: 
+  description: "\uD55C\uC190\uAC80\uC785\uB2C8\uB2E4."
+  price: 50
+  damage: 50
+  weaponName: Sword
+  controllers: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
+  weaponPrefab: {fileID: 1601136731410419248, guid: 134b787a122543747b7c668710f0a9ef, type: 3}
+  weaponSprite: {fileID: 21300000, guid: 326fd311cae013d4fac170496ac19817, type: 3}
+  amberAttackComboAnimationNames:
+  - Sword-Attack-R1
+  - Sword-Attack-R2
+  - Sword-Attack-R5
+  strongAttackComboAnimationNames:
+  - Sword-Attack-R3
+  - Sword-Attack-R6
+  - Sword-Attack-R4

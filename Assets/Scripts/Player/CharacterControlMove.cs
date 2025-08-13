@@ -10,16 +10,16 @@ public class CharacterControllerMove : MonoBehaviour
     Animator anim;
     public Player player;
 
-    public float moveSpeed; //������ �ְ�ӵ� = 1
-    public float sprintSpeed; //�۶� �ְ�ӵ� = 3
+    public float moveSpeed;
+    public float sprintSpeed;
     public bool isBattle;
     public bool isJump;
 
     private bool canMove = true;
     private bool isRollDodge = false;
 
-    private float currentSpeed; //�ȴ� �ٴ� ���� �������� �ϴ� �ӵ�
-    private float rawSpeed; //�Ȱ� ������ 1, �ٰ� ������ 2�� �Ǵ� �Է¼ӵ�
+    private float currentSpeed;
+    private float rawSpeed;
 
     private float gravityVelocity;
 
@@ -28,8 +28,8 @@ public class CharacterControllerMove : MonoBehaviour
 
     public float lookUpSpeed;
 
-    public float canTargetMaxHeight; //canTarget�� �ö� �� �ִ� �ִ� ����
-    public float canTargetMinHeight; //canTarget�� ������ �� �ִ� �ּ� ����
+    public float canTargetMaxHeight;
+    public float canTargetMinHeight;
     private MouseControl mouseControl;
 
     void Awake()
@@ -60,7 +60,7 @@ public class CharacterControllerMove : MonoBehaviour
     {
         if (player.currentStamina < player.MaxStamina)
         {
-            if (isBattle) 
+            if (isBattle)
             {
                 UIManager.Instance.TakeStemina(-5 * Time.deltaTime);
                 player.currentStamina += 5 * Time.deltaTime;
@@ -88,7 +88,6 @@ public class CharacterControllerMove : MonoBehaviour
 
         rawSpeed = InputValue.magnitude + sprintValue;
 
-        //currentSpeed = ���� ���� �ӵ� + �� ���� �ӵ�((�� ���� �ְ�ӵ� - ���� ���� �ְ�ӵ�) * sprintValue)
 
         currentSpeed = (InputValue.magnitude * moveSpeed) + ((sprintSpeed - moveSpeed) * sprintValue);
 
@@ -96,12 +95,10 @@ public class CharacterControllerMove : MonoBehaviour
 
         if (charCtrl.isGrounded)
         {
-            //���� ��� �����Ƿ� �߷� ������ �ʱ�ȭ.
             gravityVelocity = 0;
         }
         else
         {
-            //���� ���� �ʾ����Ƿ� �߷��� ���� ��ŭ �ٴ����� �������� ��.(�߷� ���ӵ� ����)
             gravityVelocity += Time.deltaTime * Physics.gravity.y;
         }
 
@@ -112,7 +109,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             anim.SetFloat("XDir", x);
             anim.SetFloat("YDir", z);
-            anim.SetFloat("Speed", rawSpeed); //���� ���� 0~1, �� ���� 1~2
+            anim.SetFloat("Speed", rawSpeed);
         }
         else
         {
@@ -126,15 +123,12 @@ public class CharacterControllerMove : MonoBehaviour
     {
         if (!MouseControl.isFocused) return;
 
-        //InputManager�� ���ؼ� ���콺 �̵��� ��������(mouseDelta)
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        //���콺 �¿� �����ӿ� �°� Rotate
         transform.Rotate(0, mouseX * turnSpeed * Time.deltaTime, 0);
 
         Vector3 canTargetPos = canTarget.localPosition;
-        //Mathf.Clamp(��, �ּҰ�, �ִ밪) : ���� ���� �ּҰ��̳� �ִ밪 ������ ���̸� �״�� ��ȯ, �ƴϸ� �ּҰ��̳� �ִ밪�� ��ȯ
         canTargetPos.y = Mathf.Clamp(canTargetPos.y + (mouseY * lookUpSpeed * Time.deltaTime), canTargetMinHeight, canTargetMaxHeight);
         canTarget.localPosition = canTargetPos;
     }

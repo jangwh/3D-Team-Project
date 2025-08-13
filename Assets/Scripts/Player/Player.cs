@@ -7,13 +7,16 @@ using UnityEngine;
 public class Player : Character
 {
     Animator anim;
+    public AudioSource audioSource;
 
     public float MaxStamina;
     public float currentStamina;
+    public AudioClip[] audioClip;
     [HideInInspector]public bool isDie = false;
     void Awake()
     {
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
     protected override void Start()
     {
@@ -23,7 +26,18 @@ public class Player : Character
         UIManager.Instance.UImaxStamina = MaxStamina;             
         UIManager.Instance.UIcurrentHp = currentHp; 
         UIManager.Instance.UIcurrentStamina = currentStamina;
-
+    }
+    void Update()
+    {
+        HP();
+        Die();
+    }
+    public void HP()
+    {
+        if (currentHp >= maxHp)
+        {
+            currentHp = maxHp;
+        }
     }
     public override void TakeDamage(float damage)
     {
@@ -58,5 +72,45 @@ public class Player : Character
         yield return new WaitForSeconds(1f);
         LeanPool.Despawn(this);
         UIManager.Instance.GameOver.SetActive(true);
+    }
+    public void OnFootSoundOne()
+    {
+        audioSource.PlayOneShot(audioClip[0]);
+    }
+    public void OnFootSoundTwo()
+    {
+        audioSource.PlayOneShot(audioClip[1]);
+    }
+    public void OnRunSoundOne()
+    {
+        audioSource.PlayOneShot(audioClip[2]);
+    }
+    public void OnRunSoundTwo()
+    {
+        audioSource.PlayOneShot(audioClip[3]);
+    }
+    public void OnJumpSound()
+    {
+        audioSource.PlayOneShot(audioClip[4]);
+    }
+    public void OnSwordSound()
+    {
+        audioSource.PlayOneShot(audioClip[5]);
+    }
+    public void OnAxeSound()
+    {
+        audioSource.PlayOneShot(audioClip[6]);
+    }
+    public void OnRollSound()
+    {
+        audioSource.PlayOneShot(audioClip[7]);
+    }
+    public void OnDrinkSound()
+    {
+        audioSource.PlayOneShot(audioClip[8]);
+    }
+    public void OnDie()
+    {
+        audioSource.PlayOneShot(audioClip[9]);
     }
 }

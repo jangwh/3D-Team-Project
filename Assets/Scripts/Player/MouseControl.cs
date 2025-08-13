@@ -3,10 +3,9 @@ using UnityEngine;
 public class MouseControl : MonoBehaviour
 {
     public static MouseControl Instance { get; private set; }
-    public static bool isFocused;   // ï¿½ï¿½ï¿½ï¿½ Ã¢ ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-    public static bool isUIMode;    // UI ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public static bool isFocused;   // °ÔÀÓ Ã¢ Æ÷Ä¿½º ¿©ºÎ
+    public static bool isUIMode;    // UI ¸ğµå ¿©ºÎ
     public bool isStoreOn;
-    private bool prevStoreOn;
 
     void Awake()
     {
@@ -19,23 +18,12 @@ public class MouseControl : MonoBehaviour
     void Start()
     {
         isUIMode = false;
-        prevStoreOn = isStoreOn;
         OnApplicationFocus(true);
     }
 
     void Update()
     {
-        if (prevStoreOn != isStoreOn)
-        {
-            if (!isStoreOn)
-            {
-                // Storeê°€ êº¼ì§ˆ ë•Œ ê°•ì œë¡œ UI ëª¨ë“œë„ í•´ì œ í›„ ApplyCursorState ì‹¤í–‰
-                isUIMode = false;
-                ApplyCursorState();
-            }
-            prevStoreOn = isStoreOn;
-        }
-        // ESC ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UI ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ş´ï¿½ ï¿½ï¿½ï¿½ï¿½)
+        // ESC ´©¸£¸é UI ¸ğµå Åä±Û (°ÔÀÓ ¸Ş´º ¿¹½Ã)
         if(isStoreOn)
         {
             OnApplicationFocus(false);
@@ -44,6 +32,7 @@ public class MouseControl : MonoBehaviour
         {
             if(Input.GetKeyUp(KeyCode.Escape))
             {
+                ToggleUIMode(!isUIMode);
                 OnApplicationFocus(false);
             }
             else if(Input.anyKeyDown)
@@ -53,7 +42,7 @@ public class MouseControl : MonoBehaviour
         }
     }
 
-    public void OnApplicationFocus(bool focus)
+    void OnApplicationFocus(bool focus)
     {
         isFocused = focus;
         ApplyCursorState();
@@ -67,7 +56,7 @@ public class MouseControl : MonoBehaviour
 
     private void ApplyCursorState()
     {
-        if (!isFocused) // Ã¢ ï¿½ï¿½Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×»ï¿½ Ä¿ï¿½ï¿½ Ç¥ï¿½ï¿½
+        if (!isFocused) // Ã¢ Æ÷Ä¿½º ÀÒÀ¸¸é Ç×»ó Ä¿¼­ Ç¥½Ã
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;

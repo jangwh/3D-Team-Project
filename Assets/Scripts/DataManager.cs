@@ -23,17 +23,24 @@ public class FileData
 }
 public class DataManager : MonoBehaviour
 {
-    public DataManager Instance { get; private set; }
+    public static DataManager Instance { get; private set; }
 
     public string saveFileName;
 
     public List<ItemData> itemDatas;
 
-    // Use persistentDataPath for save file location
-    public string SaveFilePath => $"{Application.persistentDataPath}/{saveFileName}.json";
+    public string SaveFilePath => $"{Application.dataPath}/{saveFileName}.json";
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(this);
+            return;
+        }
     }
     void Start()
     {
@@ -54,40 +61,25 @@ public class DataManager : MonoBehaviour
     }
     public void Load()
     {
-        FileData save = null;
+        FileData save;
         try
         {
             string json = File.ReadAllText(SaveFilePath);
             save = JsonUtility.FromJson<FileData>(json);
         }
-        catch (System.Exception ex)
+        catch
         {
-            Debug.Log($"Failed to load save file: {ex.Message}\n{ex.StackTrace}");
+            print("save 파일이 없음.");
             return;
         }
 
-        // Clear current inventory before loading
-        InventoryManager.Items.Clear();
-        if (save != null)
-        {
-            InventoryManager.Items.AddRange(save.items);
-            InventoryManager.Items.AddRange(save.consumables);
-        }
+        InventoryManager.Items.AddRange(save.items);
+        InventoryManager.Items.AddRange(save.consumables);
 
         foreach (ItemStatus item in InventoryManager.Items)
         {
             item.Data = itemDatas.Find(x => x.uid == item.uid);
         }
-
-        // Update UI directly and refresh MyItems UI after loading
-        var myItems = FindObjectOfType<MyItems>();
-        if (myItems != null)
-        {
-            myItems.Refresh(InventoryManager.Items);
-        }
-        else
-        {
-            InventoryManager.Refresh();
-        }
+        InventoryManager.Refresh();
     }
 }

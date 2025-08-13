@@ -112,11 +112,6 @@ public class Monster : Character, IPoolable
             CurrentSpeed = rigid.velocity.magnitude;
             animator.SetFloat("Speed", CurrentSpeed);
 
-            if (currentHp/maxHp <= 0.5f)
-            {
-                Stun();
-            }
-
             if (currentHp <= 0)
             {
                 Die();
@@ -137,11 +132,6 @@ public class Monster : Character, IPoolable
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
     }
 
-    public void Stun()
-    {
-
-    }
-
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
     {
         SpawnItem();
@@ -153,7 +143,7 @@ public class Monster : Character, IPoolable
         //아이템 소환 로직
     }
 
-    public void OnSpawn() //인스펙터에서 설정한 값을 그대로 불러옵니다. //Leanpool로 
+    public void OnSpawn() //Leanpool spawn으로 소환시 상태를 초기화 하는 메서드입니다.
     {
         //체력 리필 
         currentHp = maxHp;

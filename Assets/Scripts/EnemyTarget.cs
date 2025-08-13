@@ -1,34 +1,44 @@
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyTarget : Character
+public class EnemyTarget : MonoBehaviour //Monster.cs가 달려있는 오브젝트에 같이 달려 있습니다.
 {
     public Transform lockOnPoint;
     public Collider StunCollider;
-    public bool isStun;
-    protected override void Start()
+    public Monster monster;
+    public float stunTime;
+
+    void Awake()
     {
-        base.Start();
-        StunCollider.enabled = false;
-    }
-    public override void TakeDamage(float damage)
-    {
-        currentHp -= damage;
+        monster = GetComponent<Monster>();
     }
     void Update()
     {
-        Stun();
+        if (monster.currentHp/monster.maxHp <= 0.5f)
+        {
+            Stun(stunTime);
+        }
     }
-    void Stun()
+    void Start()
     {
-        if (isStun)
-        {
-            StunCollider.enabled = true;
-        }
-        else
-        {
-            StunCollider.enabled = false;
-        }
+        StunCollider.enabled = false;
     }
+
+    public void Stun(float stunTime)
+    {
+        //animation Stun을 true로 만듬
+        //스턴 콜라이더를 setactive true
+        //코루틴으로 대기
+        //스턴 콜라이더를 setactive false
+        //animation Stun을 true로 만듬
+    }
+
+    private IEnumerator StunCoroutine()
+    {
+        yield return new WaitForSeconds(stunTime);
+    }
+
     void OnDrawGizmos()
     {
         if (lockOnPoint != null)

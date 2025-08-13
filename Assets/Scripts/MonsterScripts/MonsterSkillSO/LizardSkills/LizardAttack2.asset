@@ -15,8 +15,8 @@ MonoBehaviour:
   damageMultiplier: 1
   attackRange: 2
   attackCooldown: 2
-  preAttackDelay: 0.2
-  attackDuration: 0.5
+  preAttackDelay: 0.7
+  attackDuration: 1.2
   hitboxNames:
   - Hand
   attackAnimationTrigger: Attack2

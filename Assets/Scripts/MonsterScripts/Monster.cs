@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -212,13 +213,13 @@ public class Monster : Character
     {
         if (patrolPoints == null || patrolPoints.Length == 0 || isWaiting) return;
 
-        if (!navMeshAgent.hasPath || navMeshAgent.remainingDistance < 0.5f)
+        if (!navMeshAgent.hasPath || navMeshAgent.remainingDistance < 2f)
         {
             StartCoroutine(WaitAtPatrolPoint());
         }
     }
 
-    private IEnumerator WaitAtPatrolPoint() //순찰 시 방향 전환할때 잠깐 멈춤
+    private IEnumerator WaitAtPatrolPoint() //순찰 시 방향 전환할때 잠깐 멈추고 다음 이동 지점 설정
     {
         isWaiting = true;
         yield return new WaitForSeconds(patrolWaitTime);
@@ -240,7 +241,11 @@ public class Monster : Character
                 player = null;
                 print("플레이어를 놓쳤습니다. 순찰 상태로 복귀합니다.");
                 animator.SetInteger("IdleState", 0);
+
+                navMeshAgent.ResetPath();
+
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
+                
             }
         }
         else

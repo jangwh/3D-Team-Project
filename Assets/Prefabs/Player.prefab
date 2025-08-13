@@ -223,7 +223,7 @@ MonoBehaviour:
     controllers: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
     weapon: {fileID: 405713131033290130}
     HitBox: {fileID: 1524554052440487049}
-    weaponSprite: {fileID: 21300000, guid: 0e8506626351cf149bc48ce47e86c018, type: 3}
+    weaponSprite: {fileID: 21300000, guid: 326fd311cae013d4fac170496ac19817, type: 3}
     amberAttackComboAnimationNames:
     - Sword-Attack-R1
     - Sword-Attack-R2
@@ -243,7 +243,7 @@ MonoBehaviour:
     controllers: {fileID: 9100000, guid: ef20c8a5a49dd3a4dae52491fef2a5a8, type: 2}
     weapon: {fileID: 4260208348824658750}
     HitBox: {fileID: 384276810874341550}
-    weaponSprite: {fileID: 21300000, guid: 741cf3be42cfb424cab61915b7159bd5, type: 3}
+    weaponSprite: {fileID: 21300000, guid: 4f0a931cfe8583c4a89e4385f1ba687a, type: 3}
     amberAttackComboAnimationNames:
     - 2Hand-Axe-Attack3
     - 2Hand-Axe-Attack2

@@ -18,8 +18,18 @@ public class MapMonsterSpawner : MonoBehaviour //맵의 자식으로 빈오브�
     [Tooltip("이 맵의 모든 순찰 지점 빈 오브젝트들을 담고 있는 부모 오브젝트를 할당해주세요.")]
     public Transform mapPatrolPointsContainer;
 
+    void OnEnable()
+    {
+        ActivateMonsters();
+    }
+
+    void OnDisable()
+    {
+        DeactivateMonsters();
+    }
+
     [ContextMenu("현재 맵에 있는 몬스터 정보 수집")]
-    void CollectInitialMonsterPlacements() //Awake에 불러와져서 맵의 몬스터 정보들을 수집하는 메서드입니다.
+    void CollectInitialMonsterPlacements() //인스펙터 메뉴창에서 선택해서 불러옵니다.
     {
         monsterPlacements.Clear(); //초기화
 

@@ -1,16 +1,21 @@
-﻿using System.Collections;
+﻿using Lean.Pool;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : Character
+public class Monster : Character, IPoolable
 {
     public enum MonsterIdleState //몬스터의 Idle 상태 2가지
     {
         Idle, Patrol
     }
+
+    [Header("원본 프리펩")] //몬스터 스폰할 때 사용합니다.
+    public GameObject myPrefab;
 
     [Header("몬스터 설정")]
     public MonsterIdleState initialState = MonsterIdleState.Idle; // 초기 상태 (대기 또는 순찰)
@@ -22,6 +27,7 @@ public class Monster : Character
     [Header("순찰 설정")]
     public Transform[] patrolPoints; // 순찰 지점들
     public float patrolWaitTime = 2f;
+    
 
     [Header("플레이어 추적 설정")]
     public float detectionRadius = 10f; // 플레이어를 감지할 반경
@@ -42,7 +48,9 @@ public class Monster : Character
     private bool isWaiting = false;
     private bool isAttacking = false;
     private float CurrentSpeed;
-    
+    private bool isDie = false;
+    private Vector3 initialPosition;
+    private bool isStun = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
@@ -53,6 +61,7 @@ public class Monster : Character
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        initialPosition = transform.position;
 
         foreach (var pattern in attackPatterns)
         {
@@ -80,30 +89,106 @@ public class Monster : Character
 
     void Update()
     {
-        if (navMeshAgent.isOnNavMesh)
+        if (!isDie && !isStun) //죽은 상태나 기절 상태가 아니면, 움직인다.
         {
-            navMeshAgent.nextPosition = transform.position;
-        }
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.nextPosition = transform.position;
+            }
 
-        CheckForPlayer(); //지속적으로 추적상태 업데이트
+            CheckForPlayer(); //지속적으로 추적상태 업데이트
 
-        if (isChasing)
+            if (isChasing)
+            {
+                ChaseAndAttackPlayer();
+            }
+            else
+            {
+                PerformInitialStateBehavior();
+            }
+
+            if (navMeshAgent.isOnNavMesh && !isAttacking)
+            {
+                rigid.velocity = navMeshAgent.velocity;
+            }
+
+            //애니메이션 업데이트 로직
+            CurrentSpeed = rigid.velocity.magnitude;
+            animator.SetFloat("Speed", CurrentSpeed);
+
+            if (currentHp <= 0)
+            {
+                Die();
+            }
+        }   
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        isDie = true;
+        animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
+    }
+
+    public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
+    {
+        SpawnItem();
+        LeanPool.Despawn(gameObject); //TODO : ObjectManager.cs에 몬스터 등록하는 로직 필요.
+    }
+
+    public void SpawnItem()
+    {
+        //아이템 소환 로직
+    }
+
+    public void OnSpawn() //Leanpool spawn으로 소환시 상태를 초기화 하는 메서드입니다.
+    {
+        //체력 리필 
+        currentHp = maxHp;
+
+        //초기 위치로 초기화
+        transform.position = initialPosition;
+        navMeshAgent.Warp(initialPosition);
+
+        //상태 초기화
+        isDie = false;
+        isChasing = false;
+        isAttacking = false;
+        isWaiting = false;
+
+        //NavMeshAgent 초기화
+        navMeshAgent.isStopped = false;
+        navMeshAgent.ResetPath();
+
+        //애니메이션 초기화
+        animator.Rebind();
+        animator.Update(0f);
+
+        //공격 쿨타임 초기화
+        foreach(var pattern in attackPatterns)
         {
-            ChaseAndAttackPlayer();
+            attackCooldowns[pattern] = -999f;
         }
-        else
-        {
-            PerformInitialStateBehavior();
-        }
+    }
 
-        if (navMeshAgent.isOnNavMesh && !isAttacking)
-        {
-            rigid.velocity = navMeshAgent.velocity;
-        }
+    public void Initialize(MonsterIdleState initialMode, Transform[] specificPatrolPoints)
+    {
+        currentState = initialMode;
+        patrolPoints = specificPatrolPoints;
 
-        //애니메이션 업데이트 로직
-        CurrentSpeed = rigid.velocity.magnitude;
-        animator.SetFloat("Speed", CurrentSpeed);
+        if (currentState == MonsterIdleState.Patrol && patrolPoints != null && patrolPoints.Length > 0)
+        {
+            navMeshAgent.SetDestination(patrolPoints[0].position);
+        }
+    }
+
+    public void OnDespawn()
+    {
         
     }
 
@@ -288,4 +373,6 @@ public class Monster : Character
             Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
         }
     }
+
+    
 }

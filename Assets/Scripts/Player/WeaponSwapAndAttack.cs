@@ -1,4 +1,4 @@
-using RPGCharacterAnims.Actions;
+ï»¿using RPGCharacterAnims.Actions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     public List<WeaponData> weapons = new List<WeaponData>();
 
     [Header("References")]
-    public CharacterControllerMove characterControllerMove; // ÀÌµ¿ Á¦¾î ½ºÅ©¸³Æ® ÂüÁ¶
+    public CharacterControllerMove characterControllerMove; // ì´ë™ ì œì–´ ìŠ¤í¬ë¦½íŠ¸ ì°¸ì¡°
     public PlayerLockOn playerLockOn;
     private Animator anim;
 
@@ -48,7 +48,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
 
         if (weapons.Count == 0)
         {
-            Debug.LogError("¹«±â µ¥ÀÌÅÍ°¡ ºñ¾î ÀÖ½À´Ï´Ù!");
+            Debug.LogError("ë¬´ê¸° ë°ì´í„°ê°€ ë¹„ì–´ ìˆìŠµë‹ˆë‹¤!");
             return;
         }
         weapons[currentWeaponIndex].HitBox.enabled = false;
@@ -83,17 +83,17 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            // ÇöÀç ¹«±â ºñÈ°¼ºÈ­
+            // í˜„ì¬ ë¬´ê¸° ë¹„í™œì„±í™”
             if (weapons[currentWeaponIndex].weapon != null)
             {
                 weapons[currentWeaponIndex].weapon.SetActive(false);
             }
-            // ½º¿Ò
+            // ìŠ¤ì™‘
             currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Count;
             SetWeapon(currentWeaponIndex);
-            // »óÅÂ ÃÊ±âÈ­
-            StopAllCoroutines(); // ÀÌÀü ¹«±â È÷Æ®¹Ú½º/°¡µå¹Ú½º ÄÚ·çÆ¾ ÁßÁö
-            ResetCombo();        // ÄŞº¸ »óÅÂ ¹× ÀÌµ¿ °¡´É »óÅÂ º¹¿ø
+            // ìƒíƒœ ì´ˆê¸°í™”
+            StopAllCoroutines(); // ì´ì „ ë¬´ê¸° íˆíŠ¸ë°•ìŠ¤/ê°€ë“œë°•ìŠ¤ ì½”ë£¨í‹´ ì¤‘ì§€
+            ResetCombo();        // ì½¤ë³´ ìƒíƒœ ë° ì´ë™ ê°€ëŠ¥ ìƒíƒœ ë³µì›
             if (weapons[currentWeaponIndex].weapon != null)
             {
                 weapons[currentWeaponIndex].HitBox.enabled = false;
@@ -195,7 +195,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         }
     }
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£Ãâ
+    // ì• ë‹ˆë©”ì´ì…˜ ì´ë²¤íŠ¸ì—ì„œ í˜¸ì¶œ
     public void OnComboAnimationEnd()
     {
         var comboList = weapons[currentWeaponIndex].amberAttackComboAnimationNames;
@@ -213,7 +213,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         }
     }
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£Ãâ
+    // ì• ë‹ˆë©”ì´ì…˜ ì´ë²¤íŠ¸ì—ì„œ í˜¸ì¶œ
     public void OnStrongComboAnimationEnd()
     {
         var comboList = weapons[currentWeaponIndex].strongAttackComboAnimationNames;
@@ -290,8 +290,8 @@ public class WeaponSwapAndAttack : MonoBehaviour
                 StartCoroutine(SpecialAttack());
                 UIManager.Instance.TakeStemina(5);
                 player.currentStamina -= 5;
-                other.gameObject.GetComponentInParent<EnemyTarget>().TakeDamage(150);
-                playerLockOn.currentTarget.isStun = false;
+                other.gameObject.GetComponentInParent<Character>().TakeDamage(150);
+                //playerLockOn.currentTarget.isStun = false;
             }
         }
     }
@@ -299,7 +299,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         playerCollider.enabled = false;
         anim.SetTrigger("SpecialAttack");
-        print("Æ¯¼ö°ø°İ");
+        print("íŠ¹ìˆ˜ê³µê²©");
         yield return new WaitForSeconds(1f);
         playerCollider.enabled = true;
     }

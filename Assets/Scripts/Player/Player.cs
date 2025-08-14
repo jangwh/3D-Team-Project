@@ -48,6 +48,9 @@ public class Player : Character
     {
         currentHp = maxHp;
         currentStamina = MaxStamina;
+        UIManager.Instance.frontHpBar.fillAmount = 1;
+        UIManager.Instance.frontSteminaBar.fillAmount = 1;
+        anim.SetLayerWeight(1, 0);
         isDie = false;
     }
     IEnumerator DieAnimation()

@@ -10,16 +10,16 @@ public class CharacterControllerMove : MonoBehaviour
     Animator anim;
     public Player player;
 
-    public float moveSpeed; //°ÉÀ»¶§ ÃÖ°í¼Óµµ = 1
-    public float sprintSpeed; //¶Û¶§ ÃÖ°í¼Óµµ = 3
+    public float moveSpeed; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½Óµï¿½ = 1
+    public float sprintSpeed; //ï¿½Û¶ï¿½ ï¿½Ö°ï¿½Óµï¿½ = 3
     public bool isBattle;
     public bool isJump;
 
     private bool canMove = true;
     private bool isRollDodge = false;
 
-    private float currentSpeed; //°È´ø ¶Ù´ø ÇöÀç ¿òÁ÷¿©¾ß ÇÏ´Â ¼Óµµ
-    private float rawSpeed; //°È°í ÀÖÀ¸¸é 1, ¶Ù°í ÀÖÀ¸¸é 2°¡ µÇ´Â ÀÔ·Â¼Óµµ
+    private float currentSpeed; //ï¿½È´ï¿½ ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½Óµï¿½
+    private float rawSpeed; //ï¿½È°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1, ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½Ô·Â¼Óµï¿½
 
     private float gravityVelocity;
 
@@ -28,19 +28,22 @@ public class CharacterControllerMove : MonoBehaviour
 
     public float lookUpSpeed;
 
-    public float canTargetMaxHeight; //canTargetÀÌ ¿Ã¶ó°¥ ¼ö ÀÖ´Â ÃÖ´ë ³ôÀÌ
-    public float canTargetMinHeight; //canTargetÀÌ ³»·Á°¥ ¼ö ÀÖ´Â ÃÖ¼Ò ³ôÀÌ
+    public float canTargetMaxHeight; //canTargetï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float canTargetMinHeight; //canTargetï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+    private MouseControl mouseControl;
 
     void Awake()
     {
         charCtrl = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        mouseControl = FindObjectOfType<MouseControl>();
     }
     void Update()
     {
+        if (mouseControl.isStoreOn) return;
         if (player.isDie) return;
         if (!canMove) return;
-        MosueMove();
+        MouseMove();
         PlayerMove();
         Stamina();
         if (player.currentStamina <= 0)
@@ -85,7 +88,7 @@ public class CharacterControllerMove : MonoBehaviour
 
         rawSpeed = InputValue.magnitude + sprintValue;
 
-        //currentSpeed = °ÉÀ» ¶§ÀÇ ¼Óµµ + ¶Û ¶§ÀÇ ¼Óµµ((¶Û ¶§ÀÇ ÃÖ°í¼Óµµ - °ÉÀ» ¶§ÀÇ ÃÖ°í¼Óµµ) * sprintValue)
+        //currentSpeed = ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½ + ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½((ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½Óµï¿½ - ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½Óµï¿½) * sprintValue)
 
         currentSpeed = (InputValue.magnitude * moveSpeed) + ((sprintSpeed - moveSpeed) * sprintValue);
 
@@ -93,12 +96,12 @@ public class CharacterControllerMove : MonoBehaviour
 
         if (charCtrl.isGrounded)
         {
-            //¶¥¿¡ ´ê¾Æ ÀÖÀ¸¹Ç·Î Áß·Â ¿µÇâÀ» ÃÊ±âÈ­.
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­.
             gravityVelocity = 0;
         }
         else
         {
-            //¶¥¿¡ ´êÁö ¾Ê¾ÒÀ¸¹Ç·Î Áß·ÂÀÇ ¿µÇâ ¸¸Å­ ¹Ù´ÚÀ¸·Î ¶³¾îÁ®¾ß ÇÔ.(Áß·Â °¡¼Óµµ ´©Àû)
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ß·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å­ ï¿½Ù´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.(ï¿½ß·ï¿½ ï¿½ï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½)
             gravityVelocity += Time.deltaTime * Physics.gravity.y;
         }
 
@@ -109,7 +112,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             anim.SetFloat("XDir", x);
             anim.SetFloat("YDir", z);
-            anim.SetFloat("Speed", rawSpeed); //°ÉÀ» ¶§´Â 0~1, ¶Û ¶§´Â 1~2
+            anim.SetFloat("Speed", rawSpeed); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 0~1, ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 1~2
         }
         else
         {
@@ -119,19 +122,19 @@ public class CharacterControllerMove : MonoBehaviour
             anim.SetFloat("Speed", rawSpeed);
         }
     }
-    void MosueMove()
+    void MouseMove()
     {
         if (!MouseControl.isFocused) return;
 
-        //InputManager¸¦ ÅëÇØ¼­ ¸¶¿ì½º ÀÌµ¿°ª °¡Á®¿À°¡(mouseDelta)
+        //InputManagerï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ì½º ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(mouseDelta)
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
-        //¸¶¿ì½º ÁÂ¿ì ¿òÁ÷ÀÓ¿¡ ¸Â°Ô Rotate
+        //ï¿½ï¿½ï¿½ì½º ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ ï¿½Â°ï¿½ Rotate
         transform.Rotate(0, mouseX * turnSpeed * Time.deltaTime, 0);
 
         Vector3 canTargetPos = canTarget.localPosition;
-        //Mathf.Clamp(°ª, ÃÖ¼Ò°ª, ÃÖ´ë°ª) : °ªÀÌ ¸¸¾à ÃÖ¼Ò°ªÀÌ³ª ÃÖ´ë°ª »çÀÌÀÇ °ªÀÌ¸é ±×´ë·Î ¹ÝÈ¯, ¾Æ´Ï¸é ÃÖ¼Ò°ªÀÌ³ª ÃÖ´ë°ªÀ» ¹ÝÈ¯
+        //Mathf.Clamp(ï¿½ï¿½, ï¿½Ö¼Ò°ï¿½, ï¿½Ö´ë°ª) : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼Ò°ï¿½ï¿½Ì³ï¿½ ï¿½Ö´ë°ª ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½×´ï¿½ï¿½ ï¿½ï¿½È¯, ï¿½Æ´Ï¸ï¿½ ï¿½Ö¼Ò°ï¿½ï¿½Ì³ï¿½ ï¿½Ö´ë°ªï¿½ï¿½ ï¿½ï¿½È¯
         canTargetPos.y = Mathf.Clamp(canTargetPos.y + (mouseY * lookUpSpeed * Time.deltaTime), canTargetMinHeight, canTargetMaxHeight);
         canTarget.localPosition = canTargetPos;
     }

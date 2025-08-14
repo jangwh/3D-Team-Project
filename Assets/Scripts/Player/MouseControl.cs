@@ -1,42 +1,64 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseControl : MonoBehaviour
 {
-    public static bool isFocused;
+    public static MouseControl Instance { get; private set; }
+    public static bool isFocused;   // 게임 창 포커스 여부
+    public static bool isUIMode;    // UI 모드 여부
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
+            Destroy(gameObject);
+    }
+
     void Start()
     {
-        //Application.isFocused  : 현재 창이 포커스 되어있는지 여부
-        //유니티 에디터에서는 Game 창을 클릭하면 Focus, esc키를 누르면 Focus false
+        isUIMode = false;
         OnApplicationFocus(true);
     }
 
     void Update()
     {
+        // ESC 누르면 UI 모드 토글 (게임 메뉴 예시)
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OnApplicationFocus(false);
-        }
-        else if (Input.anyKeyDown)
-        {
-            OnApplicationFocus(true);
+            ToggleUIMode(!isUIMode);
         }
     }
 
-    //onApplicationFocus : 게임 프로세스가 os에서 포커스 되거나 포커스에서 벗어날 경우 호출, 파라미터로 on인지 off인지 전달
-    public void OnApplicationFocus(bool focus)
+    void OnApplicationFocus(bool focus)
     {
         isFocused = focus;
-        if (isFocused)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-        else
+        ApplyCursorState();
+    }
+
+    public void ToggleUIMode(bool enable)
+    {
+        isUIMode = enable;
+        ApplyCursorState();
+    }
+
+    private void ApplyCursorState()
+    {
+        if (!isFocused) // 창 포커스 잃으면 항상 커서 표시
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            return;
+        }
+
+        if (isUIMode)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 }

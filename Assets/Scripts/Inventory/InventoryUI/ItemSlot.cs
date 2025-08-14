@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
 public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     public Image icon;
@@ -13,15 +12,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
         set
         {
             item = value;
-            icon.enabled = true;
-            icon.sprite = value.Data.icon;
+            icon.enabled = value != null;
+            if (value != null)
+                icon.sprite = value.Data.icon;
         }
-    }
-    public void SetItem(ItemStatus item)
-    {
-        this.item = item;
-        icon.enabled = true;
-        icon.sprite = item.Data.icon;
     }
 
     public void Clear()
@@ -33,35 +27,33 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerClick(PointerEventData eventData)
     {
         if (item == null) return;
-        UIManager.Inventory.ShowInfo(item);
+        UIManager.Instance.Inventory.ShowInfo(item);
     }
 
-    #region 툴팁 표시
     public void OnPointerEnter(PointerEventData eventData)
     {
         InventoryManager.Instance.focusedSlot = this;
         if (item == null) return;
-        UIManager.Tooltip.Show(item, eventData.position);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        InventoryManager.Instance.focusedSlot = null;
-        if (item == null) return;
-        UIManager.Tooltip.Hide();
+        UIManager.Instance.Tooltip.Show(item, eventData.position);
     }
 
     public void OnPointerMove(PointerEventData eventData)
     {
         if (item == null) return;
-        UIManager.Tooltip.UpdatePosition(eventData.position);
+        UIManager.Instance.Tooltip.UpdatePosition(eventData.position);
     }
-    #endregion
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        InventoryManager.Instance.focusedSlot = null;
+        UIManager.Instance.Tooltip.Hide();
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        icon.transform.SetParent(UIManager.Instance.transform); //아이콘 이미지를 Canvas 내에서 자유롭게 해줌
+        icon.transform.SetParent(UIManager.Instance.transform);
         InventoryManager.Instance.selectedSlot = this;
-        UIManager.Tooltip.Hide();
+        UIManager.Instance.Tooltip.Hide();
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -75,6 +67,6 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnDrag(PointerEventData eventData)
     {
         icon.rectTransform.anchoredPosition += eventData.delta;
-        UIManager.Tooltip.Hide();
+        UIManager.Instance.Tooltip.Hide();
     }
 }

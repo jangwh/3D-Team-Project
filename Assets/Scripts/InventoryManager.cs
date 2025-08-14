@@ -34,7 +34,7 @@ public class InventoryManager : MonoBehaviour
     }
     public static void Refresh()
     {
-        UIManager.Inventory.Refresh(Instance.items);
+        UIManager.Instance.Inventory.Refresh(Instance.items);
     }
     public static void Swap()
     {

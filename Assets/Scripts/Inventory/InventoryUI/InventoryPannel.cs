@@ -7,12 +7,13 @@ using TMPro;
 public class InventoryPannel : MonoBehaviour
 {
     private List<ItemSlot> slots = new List<ItemSlot>();
-    private Transform info;
+    public Transform info;
+    public Image icon;
+    public TextMeshProUGUI text;
 
     void Awake()
     {
         slots.AddRange(GetComponentsInChildren<ItemSlot>());
-        info = transform.Find("Info");
     }
     void Start()
     {
@@ -51,8 +52,8 @@ public class InventoryPannel : MonoBehaviour
     public void ShowInfo(ItemStatus itemStatus, bool fullRefresh = true)
     {
         info.gameObject.SetActive(true);
-        info.Find("IconFrame/Icon").GetComponent<Image>().sprite = itemStatus.Data.icon;
-        info.Find("InfoText").GetComponent<TextMeshProUGUI>().text = itemStatus.ToTooltipText();
+        icon.sprite = itemStatus.Data.icon;
+        text.text = itemStatus.ToTooltipText();
         if (!fullRefresh) return;
     }
 }

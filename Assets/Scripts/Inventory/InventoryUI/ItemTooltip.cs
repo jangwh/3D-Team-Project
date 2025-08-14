@@ -5,14 +5,9 @@ using TMPro;
 
 public class ItemTooltip : MonoBehaviour
 {
-    TextMeshProUGUI text;
-    RectTransform rect;
+    public TextMeshProUGUI text;
+    public RectTransform rect;
 
-    void Awake()
-    {
-        text = GetComponentInChildren<TextMeshProUGUI>();
-        rect = transform as RectTransform;
-    }
     public void Show(ItemStatus status, Vector2 pos)
     {
         if (!gameObject.activeSelf)
@@ -20,13 +15,16 @@ public class ItemTooltip : MonoBehaviour
             //현재 비활성화 상태라면
             gameObject.SetActive(true);
         }
-        Show(pos);
+        rect.anchoredPosition = pos;
         //text에 status를 텍스트로 출력
         text.text = status.ToTooltipText();
     }
-    public void Show(Vector2 pos)
+    public void UpdatePosition(Vector2 pos)
     {
-        rect.anchoredPosition = pos;
+        if (gameObject.activeSelf)
+        {
+            rect.anchoredPosition = pos;
+        }
     }
     public void Hide()
     {

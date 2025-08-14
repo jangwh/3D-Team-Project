@@ -18,10 +18,11 @@ public class UIManager : MonoBehaviour
     public Image weaponImage;
     public Image portionImage;
 
-    public Transform Canvas;
+    public RectTransform Canvas;
 
     public GameObject GameOver;
     public GameObject ItemGetAsk;
+    public MouseControl mouseControl;
 
     [HideInInspector]public float UImaxHp;
     [HideInInspector]public float UIcurrentHp;
@@ -29,7 +30,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector]public float UImaxStamina;
     [HideInInspector]public float UIcurrentStamina;
 
-    private bool isInventoryOn;
+    [HideInInspector]public bool isInventoryOn;
 
     void Awake()
     {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    private Image icon;
+    public Image icon;
     private ItemStatus item;
     public ItemStatus Item
     {
@@ -16,10 +16,6 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
             icon.enabled = true;
             icon.sprite = value.Data.icon;
         }
-    }
-    void Awake()
-    {
-        icon = transform.Find("Icon").GetComponent<Image>();
     }
     public void SetItem(ItemStatus item)
     {
@@ -58,7 +54,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
     public void OnPointerMove(PointerEventData eventData)
     {
         if (item == null) return;
-        UIManager.Tooltip.Show(eventData.position);
+        UIManager.Tooltip.UpdatePosition(eventData.position);
     }
     #endregion
     public void OnBeginDrag(PointerEventData eventData)

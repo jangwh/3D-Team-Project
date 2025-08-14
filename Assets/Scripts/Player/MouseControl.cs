@@ -5,7 +5,6 @@ using UnityEngine;
 public class MouseControl : MonoBehaviour
 {
     public static bool isFocused;
-
     void Start()
     {
         //Application.isFocused  : 현재 창이 포커스 되어있는지 여부
@@ -26,7 +25,7 @@ public class MouseControl : MonoBehaviour
     }
 
     //onApplicationFocus : 게임 프로세스가 os에서 포커스 되거나 포커스에서 벗어날 경우 호출, 파라미터로 on인지 off인지 전달
-    void OnApplicationFocus(bool focus)
+    public void OnApplicationFocus(bool focus)
     {
         isFocused = focus;
         if (isFocused)

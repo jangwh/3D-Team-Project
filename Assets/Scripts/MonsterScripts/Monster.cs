@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using Lean.Pool;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
-using Lean.Pool;
 
 public class Monster : Character, IPoolable
 {
@@ -12,6 +13,9 @@ public class Monster : Character, IPoolable
     {
         Idle, Patrol
     }
+
+    [Header("원본 프리펩")] //몬스터 스폰할 때 사용합니다.
+    public GameObject myPrefab;
 
     [Header("몬스터 설정")]
     public MonsterIdleState initialState = MonsterIdleState.Idle; // 초기 상태 (대기 또는 순찰)
@@ -116,8 +120,7 @@ public class Monster : Character, IPoolable
             {
                 Die();
             }
-        }
-        
+        }   
     }
 
     public override void TakeDamage(float damage)
@@ -135,7 +138,7 @@ public class Monster : Character, IPoolable
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
     {
         SpawnItem();
-        LeanPool.Despawn(this); //TODO : ObjectManager.cs에 몬스터 등록하는 로직 필요
+        LeanPool.Despawn(gameObject); //TODO : ObjectManager.cs에 몬스터 등록하는 로직 필요.
     }
 
     public void SpawnItem()
@@ -173,8 +176,20 @@ public class Monster : Character, IPoolable
         }
     }
 
+    public void Initialize(MonsterIdleState initialMode, Transform[] specificPatrolPoints)
+    {
+        currentState = initialMode;
+        patrolPoints = specificPatrolPoints;
+
+        if (currentState == MonsterIdleState.Patrol && patrolPoints != null && patrolPoints.Length > 0)
+        {
+            navMeshAgent.SetDestination(patrolPoints[0].position);
+        }
+    }
+
     public void OnDespawn()
     {
+        
     }
 
     public void SetIsAttacking(bool status) //콤보 공격시 사용예정

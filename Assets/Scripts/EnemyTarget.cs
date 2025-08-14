@@ -13,13 +13,13 @@ public class EnemyTarget : MonoBehaviour //Monster.cs가 달려있는 오브젝�
     {
         monster = GetComponent<Monster>();
     }
-    void Update()
-    {
-        if (monster.currentHp/monster.maxHp <= 0.5f)
-        {
-            Stun(stunTime);
-        }
-    }
+    //void Update()
+    //{
+    //    if (monster.currentHp/monster.maxHp <= 0.5f)
+    //    {
+    //        Stun(stunTime);
+    //    }
+    //}
     void Start()
     {
         StunCollider.enabled = false;

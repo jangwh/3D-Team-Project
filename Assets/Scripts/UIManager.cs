@@ -18,13 +18,18 @@ public class UIManager : MonoBehaviour
     public Image weaponImage;
     public Image portionImage;
 
+    public Transform Canvas;
+
     public GameObject GameOver;
+    public GameObject ItemGetAsk;
 
     [HideInInspector]public float UImaxHp;
     [HideInInspector]public float UIcurrentHp;
 
     [HideInInspector]public float UImaxStamina;
     [HideInInspector]public float UIcurrentStamina;
+
+    private bool isInventoryOn;
 
     void Awake()
     {
@@ -37,8 +42,8 @@ public class UIManager : MonoBehaviour
             DestroyImmediate(this);
             return;
         }
-        Tooltip = transform.Find("Tooltip").GetComponent<ItemTooltip>();
-        Inventory = transform.Find("Inventory").GetComponent<InventoryPannel>();
+        Tooltip = Canvas.transform.GetComponentInChildren<ItemTooltip>();
+        Inventory = Canvas.transform.GetComponentInChildren<InventoryPannel>();
     }
     void Start()
     {
@@ -47,8 +52,28 @@ public class UIManager : MonoBehaviour
     }
     void Update()
     {
+        InvetoryOnOff();
         backHpBar.fillAmount = 1;
         backSteminaBar.fillAmount = 1;
+    }
+    void InvetoryOnOff()
+    {
+        if(!isInventoryOn)
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Inventory.gameObject.SetActive(true);
+                isInventoryOn = true;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Inventory.gameObject.SetActive(false);
+                isInventoryOn = false;
+            }
+        }
     }
     public void TakeHp(float hp)
     {

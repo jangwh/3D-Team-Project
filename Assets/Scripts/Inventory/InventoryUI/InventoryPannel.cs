@@ -54,26 +54,5 @@ public class InventoryPannel : MonoBehaviour
         info.Find("IconFrame/Icon").GetComponent<Image>().sprite = itemStatus.Data.icon;
         info.Find("InfoText").GetComponent<TextMeshProUGUI>().text = itemStatus.ToTooltipText();
         if (!fullRefresh) return;
-        Button upgradeButton = info.Find("Buttons/UpgradeButton").GetComponent<Button>();
-        Button useButton = info.Find("Buttons/UseButton").GetComponent<Button>();
-
-        if (itemStatus is ConsumableStatus)
-        {
-            //선택된 아이템이 사용가능한 아이템일 경우
-            useButton.gameObject.SetActive(true);
-            upgradeButton.gameObject.SetActive(false);
-            useButton.onClick.RemoveAllListeners();
-            useButton.onClick.AddListener(() =>
-            {
-                (itemStatus as ConsumableStatus).Use();
-                InventoryManager.Refresh();
-                info.gameObject.SetActive(false);
-            });
-        }
-        else
-        {
-            upgradeButton.gameObject.SetActive(false);
-            useButton.gameObject.SetActive(false);
-        }
     }
 }

@@ -4,32 +4,34 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Collider), typeof(Renderer))]
-public class ItemObject : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandler, IPointerExitHandler, IPointerDownHandler
+public class ItemObject : MonoBehaviour//, IPointerEnterHandler, IPointerMoveHandler, IPointerExitHandler, IPointerDownHandler
 {
     public ItemData data;
     internal ItemStatus status;
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        InventoryManager.PickupItem(this);
-        UIManager.Tooltip.Hide();
-        InventoryManager.Refresh();
-    }
+    private float playerDistance;
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        UIManager.Tooltip.Show(status, eventData.position);
-    }
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    InventoryManager.PickupItem(this);
+    //    UIManager.Tooltip.Hide();
+    //    InventoryManager.Refresh();
+    //}
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        UIManager.Tooltip.Hide();
-    }
+    //public void OnPointerEnter(PointerEventData eventData)
+    //{
+    //    UIManager.Tooltip.Show(status, eventData.position);
+    //}
 
-    public void OnPointerMove(PointerEventData eventData)
-    {
-        UIManager.Tooltip.Show(eventData.position);
-    }
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    UIManager.Tooltip.Hide();
+    //}
+
+    //public void OnPointerMove(PointerEventData eventData)
+    //{
+    //    UIManager.Tooltip.Show(eventData.position);
+    //}
 
     void Start()
     {
@@ -43,6 +45,28 @@ public class ItemObject : MonoBehaviour, IPointerEnterHandler, IPointerMoveHandl
             {
                 status = new ItemStatus(data);
             }
+        }
+    }
+    void Update()
+    {
+        Distance();
+    }
+    void Distance()
+    {
+        playerDistance = (transform.position - GameManager.Instance.player.transform.position).magnitude;
+        if (playerDistance < 1.5f)
+        {
+            UIManager.Instance.ItemGetAsk.SetActive(true);
+            if(Input.GetKeyDown(KeyCode.Z))
+            {
+                InventoryManager.PickupItem(this);
+                UIManager.Instance.ItemGetAsk.SetActive(false);
+                InventoryManager.Refresh();
+            }
+        }
+        else
+        {
+            UIManager.Instance.ItemGetAsk.SetActive(false);
         }
     }
 }

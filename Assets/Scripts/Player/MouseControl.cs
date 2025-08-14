@@ -5,6 +5,7 @@ public class MouseControl : MonoBehaviour
     public static MouseControl Instance { get; private set; }
     public static bool isFocused;   // 게임 창 포커스 여부
     public static bool isUIMode;    // UI 모드 여부
+    public bool isStoreOn;
 
     void Awake()
     {
@@ -23,9 +24,21 @@ public class MouseControl : MonoBehaviour
     void Update()
     {
         // ESC 누르면 UI 모드 토글 (게임 메뉴 예시)
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(isStoreOn)
         {
-            ToggleUIMode(!isUIMode);
+            OnApplicationFocus(false);
+        }
+        else if(!isStoreOn)
+        {
+            if(Input.GetKeyUp(KeyCode.Escape))
+            {
+                ToggleUIMode(!isUIMode);
+                OnApplicationFocus(false);
+            }
+            else if(Input.anyKeyDown)
+            {
+                OnApplicationFocus(true);
+            }
         }
     }
 

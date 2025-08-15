@@ -1657,14 +1657,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3627651890346102317}
-  - component: {fileID: 2736783175421615294}
-  - component: {fileID: 3782600617488626812}
   - component: {fileID: 692901524318303074}
   - component: {fileID: 2454909641746444709}
   - component: {fileID: 1977422940241874176}
   - component: {fileID: 6761618117518766748}
   - component: {fileID: 7157274570431481194}
-  - component: {fileID: 7423316642828205193}
+  - component: {fileID: 980126659809885844}
   m_Layer: 0
   m_Name: Shop-NPC
   m_TagString: Untagged
@@ -1688,62 +1686,6 @@ Transform:
   - {fileID: 4712291800911634876}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -1.208, z: 0}
---- !u!114 &2736783175421615294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7799026705074474057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e0ed4cd3258cbd44a54f9424f8533ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  mainCamera: {fileID: 0}
-  ikHands: {fileID: 0}
-  ladder: {fileID: 0}
-  cliff: {fileID: 0}
-  target: {fileID: 0}
-  animationSpeed: 1
-  headLook: 0
-  idleAlert: 1
-  isNearCliff: 0
-  isNearLadder: 0
-  isSitting: 0
-  isSpecial: 0
-  isTalking: 0
-  rightWeapon: 0
-  leftWeapon: 0
---- !u!114 &3782600617488626812
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7799026705074474057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e0ed4cd3258cbd44a54f9424f8533ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  mainCamera: {fileID: 0}
-  ikHands: {fileID: 0}
-  ladder: {fileID: 0}
-  cliff: {fileID: 0}
-  target: {fileID: 0}
-  animationSpeed: 1
-  headLook: 0
-  idleAlert: 1
-  isNearCliff: 0
-  isNearLadder: 0
-  isSitting: 0
-  isSpecial: 0
-  isTalking: 0
-  rightWeapon: 0
-  leftWeapon: 0
 --- !u!54 &692901524318303074
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1850,7 +1792,7 @@ MonoBehaviour:
   notification: {fileID: 0}
   store: {fileID: 0}
   mouseControl: {fileID: 0}
---- !u!114 &7423316642828205193
+--- !u!114 &980126659809885844
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1859,7 +1801,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7799026705074474057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e0ed4cd3258cbd44a54f9424f8533ff, type: 3}
+  m_Script: {fileID: 11500000, guid: ad159c285c6e6ae4caa1641e7eff37c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}

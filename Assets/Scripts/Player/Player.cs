@@ -23,7 +23,17 @@ public class Player : Character
         UIManager.Instance.UImaxStamina = MaxStamina;             
         UIManager.Instance.UIcurrentHp = currentHp; 
         UIManager.Instance.UIcurrentStamina = currentStamina;
-
+    }
+    void Update()
+    {
+        HP();    
+    }
+    public void HP()
+    {
+        if (currentHp >= maxHp)
+        {
+            currentHp = maxHp;
+        }
     }
     public override void TakeDamage(float damage)
     {

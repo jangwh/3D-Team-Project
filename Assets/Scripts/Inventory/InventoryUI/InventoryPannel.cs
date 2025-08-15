@@ -10,7 +10,6 @@ public class InventoryPannel : MonoBehaviour
     public Transform info;
     public Image icon;
     public TextMeshProUGUI text;
-
     void Awake()
     {
         slots.AddRange(GetComponentsInChildren<ItemSlot>());
@@ -55,5 +54,24 @@ public class InventoryPannel : MonoBehaviour
         icon.sprite = itemStatus.Data.icon;
         text.text = itemStatus.ToTooltipText();
         if (!fullRefresh) return;
+    }
+    public void PortionUse(ItemStatus itemStatus)
+    {
+        Player player = GameManager.Instance.player;
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (itemStatus is ConsumableStatus)
+            {
+                (itemStatus as ConsumableStatus).Use(player);
+                InventoryManager.Refresh();
+                info.gameObject.SetActive(false);
+            }
+            else
+            {
+                // 포션이 없을 때 애니메이션
+                player.GetComponent<Animator>().SetTrigger("NoPotion");
+            }
+        }
     }
 }

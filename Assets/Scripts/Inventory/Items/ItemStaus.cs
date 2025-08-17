@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using static WeaponSwapAndAttack;
 
 [Serializable]
 public class ItemStatus
@@ -71,6 +72,20 @@ public class ConsumableStatus : ItemStatus
         if (!InventoryManager.Items.Exists(i => i is ConsumableStatus))
         {
             UIManager.Instance.portionImage.sprite = null;
+        }
+    }
+    [Serializable]
+    public class WeaponStatus : ItemStatus
+    {
+        public new WeaponData Data => data as WeaponData;
+
+        public WeaponStatus(WeaponData data) : base(data)
+        {
+            if (data is not WeaponData)
+            {
+                Debug.LogError("WeaponData°¡ ¾Æ´Õ´Ï´Ù.");
+                return;
+            }
         }
     }
 }

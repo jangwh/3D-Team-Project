@@ -48,12 +48,17 @@ public class Monster : Character, IPoolable
     private bool isWaiting = false;
     private bool isAttacking = false;
     private float CurrentSpeed;
-    private bool isDie = false;
+    public bool isDie = false;
     private Vector3 initialPosition;
-    private bool isStun = false;
+    public bool isStun = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
+
+    [Header("체력회복 설정")]
+    public float healingAmount = 1f;
+    public float healingInterval = 0.5f;
+
 
     void Awake()
     {
@@ -89,6 +94,11 @@ public class Monster : Character, IPoolable
 
     void Update()
     {
+        if (!isDie && currentHp <= 0)
+        {
+            Die();
+        }
+
         if (!isDie && !isStun) //죽은 상태나 기절 상태가 아니면, 움직인다.
         {
             if (navMeshAgent.isOnNavMesh)
@@ -115,23 +125,23 @@ public class Monster : Character, IPoolable
             //애니메이션 업데이트 로직
             CurrentSpeed = rigid.velocity.magnitude;
             animator.SetFloat("Speed", CurrentSpeed);
-
-            if (currentHp <= 0)
-            {
-                Die();
-            }
         }   
     }
 
-    public override void TakeDamage(float damage)
+    public void Healing()
     {
-        base.TakeDamage(damage);
+        //코루틴으로 구현예정
     }
 
     public override void Die()
     {
         base.Die();
+        if (isDie) return;
         isDie = true;
+        if (isStun)
+        {
+            animator.SetBool("Stun", false);
+        }
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
     }
 

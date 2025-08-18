@@ -291,7 +291,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
                 UIManager.Instance.TakeStemina(5);
                 player.currentStamina -= 5;
                 other.gameObject.GetComponentInParent<Character>().TakeDamage(150);
-                //playerLockOn.currentTarget.isStun = false;
+                playerLockOn.currentTarget.AfterSpecialAttack();
             }
         }
     }

@@ -3,6 +3,7 @@ using UnityEngine;
 public enum ItemType
 {
     Consumable, //소비 아이템
+    Equip,
     Other, //기타 아이템
 
 }

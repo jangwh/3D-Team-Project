@@ -54,6 +54,7 @@ public class Monster : Character, IPoolable
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
+    private int dropran;
 
     [Header("체력회복 설정")]
     public float healingAmount = 1f;
@@ -125,7 +126,12 @@ public class Monster : Character, IPoolable
             //애니메이션 업데이트 로직
             CurrentSpeed = rigid.velocity.magnitude;
             animator.SetFloat("Speed", CurrentSpeed);
-        }   
+
+            if (currentHp <= 0)
+            {
+                Die();
+            }
+        }
     }
 
     public void Healing()
@@ -143,6 +149,7 @@ public class Monster : Character, IPoolable
             animator.SetBool("Stun", false);
         }
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
+        SpawnItem();
     }
 
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
@@ -153,7 +160,11 @@ public class Monster : Character, IPoolable
 
     public void SpawnItem()
     {
-        //아이템 소환 로직
+        dropran = Random.Range(0, 100);
+        if (dropran < 50)
+        {
+            Instantiate(DataManager.Instance.itemDatas[0].modelPrefab, transform.position, transform.rotation);
+        }
     }
 
     public void OnSpawn() //Leanpool spawn으로 소환시 상태를 초기화 하는 메서드입니다.

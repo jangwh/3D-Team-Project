@@ -7,30 +7,24 @@ using UnityEngine;
 
 public class WeaponSwapAndAttack : MonoBehaviour
 {
-    [System.Serializable]
-    public class WeaponData
-    {
-        public string weaponName;
-        public RuntimeAnimatorController controllers;
-        public GameObject weapon;
-        public Collider HitBox;
-        public Sprite weaponSprite;
-        [Header("Combo Settings")]
-        public List<string> amberAttackComboAnimationNames = new List<string>() { };
-        public List<string> strongAttackComboAnimationNames = new List<string>() { };
-    }
-
     public Player player;
     public List<WeaponData> weapons = new List<WeaponData>();
 
     [Header("References")]
     public CharacterControllerMove characterControllerMove; // 이동 제어 스크립트 참조
     public PlayerLockOn playerLockOn;
+    public Collider GuardBox;
+    public CapsuleCollider playerCollider;
+    
+    [Header("Sockets")]
+    public Transform weaponSocket;
+    
     private Animator anim;
+    private GameObject currentWeaponGO;
+    private Collider currentHitBox;
+
 
     public float comboInputBufferTime = 0.5f;
-
-    public Collider GuardBox;
 
     private int currentComboIndex = 0;
     [HideInInspector]public bool isAttacking = false;
@@ -40,18 +34,10 @@ public class WeaponSwapAndAttack : MonoBehaviour
 
     private int currentWeaponIndex = 0;
 
-    public CapsuleCollider playerCollider;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
-
-        if (weapons.Count == 0)
-        {
-            Debug.LogError("무기 데이터가 비어 있습니다!");
-            return;
-        }
-        weapons[currentWeaponIndex].HitBox.enabled = false;
         GuardBox.enabled = false;
     }
     void Start()
@@ -72,7 +58,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
         }
         HandleWeaponSwap();
 
-        if (weapons[currentWeaponIndex].weapon != null)
+        if (weapons[currentWeaponIndex].weaponPrefab != null)
         {
             HandleAttackInput();
             UpdateInputBuffer();
@@ -83,22 +69,14 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            // 현재 무기 비활성화
-            if (weapons[currentWeaponIndex].weapon != null)
-            {
-                weapons[currentWeaponIndex].weapon.SetActive(false);
-            }
-            // 스왑
+            if (currentWeaponGO != null) Destroy(currentWeaponGO);
+
             currentWeaponIndex = (currentWeaponIndex + 1) % weapons.Count;
             SetWeapon(currentWeaponIndex);
-            // 상태 초기화
-            StopAllCoroutines(); // 이전 무기 히트박스/가드박스 코루틴 중지
-            ResetCombo();        // 콤보 상태 및 이동 가능 상태 복원
-            if (weapons[currentWeaponIndex].weapon != null)
-            {
-                weapons[currentWeaponIndex].HitBox.enabled = false;
-                GuardBox.enabled = false;
-            }
+
+            StopAllCoroutines();
+            ResetCombo();
+            GuardBox.enabled = false;
         }
     }
     void Guard()
@@ -263,20 +241,39 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void SetWeapon(int index)
     {
-        var weapon = weapons[index];
-        anim.runtimeAnimatorController = weapon.controllers;
+        var data = weapons[index];
+        anim.runtimeAnimatorController = data.controllers;
 
-        if (weapons[index].weaponName != "None")
+        // 이전 무기 제거(안전)
+        if (currentWeaponGO != null)
         {
-            anim.SetLayerWeight(1, 0);
-            characterControllerMove.isBattle = true;
-            weapons[index].weapon.SetActive(true);
+            Destroy(currentWeaponGO);
+            currentWeaponGO = null;
+            currentHitBox = null;
         }
-        else
+
+        // "맨손" 같은 슬롯 처리
+        if (string.Equals(data.weaponName, "None", System.StringComparison.OrdinalIgnoreCase)
+            || data.weaponPrefab == null)
         {
             characterControllerMove.isBattle = false;
+            UIManager.Instance.weaponImage.sprite = data.weaponSprite;
+            return;
         }
-        UIManager.Instance.weaponImage.sprite = weapon.weaponSprite; 
+
+        characterControllerMove.isBattle = true;
+
+        // 소켓에 인스턴스 생성
+        currentWeaponGO = Instantiate(data.weaponPrefab, weaponSocket);
+        currentWeaponGO.transform.localPosition = Vector3.zero;
+        currentWeaponGO.transform.localRotation = Quaternion.identity;
+        currentWeaponGO.transform.localScale = Vector3.one;
+
+        // 히트박스는 인스턴스에서 찾기(자식 포함)
+        currentHitBox = currentWeaponGO.GetComponentInChildren<Collider>(true);
+        if (currentHitBox != null) currentHitBox.enabled = false;
+
+        UIManager.Instance.weaponImage.sprite = data.weaponSprite;
     }
     void OnTriggerStay(Collider other)
     {
@@ -305,9 +302,12 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     IEnumerator HitOn()
     {
-        weapons[currentWeaponIndex].HitBox.enabled = true;
-        yield return new WaitForSeconds(0.4f);
-        weapons[currentWeaponIndex].HitBox.enabled = false;
+        if (currentHitBox != null)
+        {
+            currentHitBox.enabled = true;
+            yield return new WaitForSeconds(0.4f);
+            currentHitBox.enabled = false;
+        }
     }
     IEnumerator GuardOn()
     {

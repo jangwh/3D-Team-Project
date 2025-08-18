@@ -27,6 +27,26 @@ public class InventoryManager : MonoBehaviour
     {
         Refresh();
     }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            Player player = FindObjectOfType<Player>();
+
+            // 첫 번째 포션 찾기
+            ItemStatus potion = Items.Find(i => i is ConsumableStatus);
+            if (potion != null)
+            {
+                // 포션 사용
+                UIManager.Instance.Inventory.PortionUse(potion);
+            }
+            else
+            {
+                // 포션이 없을 때 애니메이션
+                player.GetComponent<Animator>().SetTrigger("NoPotion");
+            }
+        }
+    }
     public static void PickupItem(ItemObject obj)
     {
         Instance.items.Add(obj.status);
@@ -35,6 +55,17 @@ public class InventoryManager : MonoBehaviour
     public static void Refresh()
     {
         UIManager.Instance.Inventory.Refresh(Instance.items);
+
+        // 포션 이미지 자동 갱신
+        ConsumableStatus potion = Items.Find(i => i is ConsumableStatus) as ConsumableStatus;
+        if (potion != null)
+        {
+            UIManager.Instance.portionImage.sprite = potion.Data.icon;
+        }
+        else
+        {
+            UIManager.Instance.portionImage.sprite = null;
+        }
     }
     public static void Swap()
     {

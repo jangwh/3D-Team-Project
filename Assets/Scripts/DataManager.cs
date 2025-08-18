@@ -23,7 +23,7 @@ public class FileData
 }
 public class DataManager : MonoBehaviour
 {
-    public DataManager Instance { get; private set; }
+    public static DataManager Instance { get; private set; }
 
     public string saveFileName;
 
@@ -32,7 +32,15 @@ public class DataManager : MonoBehaviour
     public string SaveFilePath => $"{Application.dataPath}/{saveFileName}.json";
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(this);
+            return;
+        }
     }
     void Start()
     {

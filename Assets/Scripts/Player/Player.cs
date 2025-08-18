@@ -26,7 +26,8 @@ public class Player : Character
     }
     void Update()
     {
-        HP();    
+        HP();
+        Die();
     }
     public void HP()
     {

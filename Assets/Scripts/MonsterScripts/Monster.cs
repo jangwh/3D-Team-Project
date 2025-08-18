@@ -54,6 +54,7 @@ public class Monster : Character, IPoolable
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
+    private int dropran;
 
     void Awake()
     {
@@ -120,7 +121,8 @@ public class Monster : Character, IPoolable
             {
                 Die();
             }
-        }   
+        }
+        dropran = Random.Range(0, 100);
     }
 
     public override void TakeDamage(float damage)
@@ -133,6 +135,7 @@ public class Monster : Character, IPoolable
         base.Die();
         isDie = true;
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
+        SpawnItem();
     }
 
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
@@ -143,7 +146,10 @@ public class Monster : Character, IPoolable
 
     public void SpawnItem()
     {
-        //아이템 소환 로직
+        if(dropran < 50)
+        {
+            Instantiate(DataManager.Instance.itemDatas[0].modelPrefab, transform.position, transform.rotation);
+        }
     }
 
     public void OnSpawn() //Leanpool spawn으로 소환시 상태를 초기화 하는 메서드입니다.

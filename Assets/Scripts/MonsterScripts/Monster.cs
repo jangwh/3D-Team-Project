@@ -122,7 +122,6 @@ public class Monster : Character, IPoolable
                 Die();
             }
         }
-        dropran = Random.Range(0, 100);
     }
 
     public override void TakeDamage(float damage)
@@ -146,7 +145,8 @@ public class Monster : Character, IPoolable
 
     public void SpawnItem()
     {
-        if(dropran < 50)
+        dropran = Random.Range(0, 100);
+        if (dropran < 50)
         {
             Instantiate(DataManager.Instance.itemDatas[0].modelPrefab, transform.position, transform.rotation);
         }

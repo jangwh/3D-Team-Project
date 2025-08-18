@@ -7,13 +7,16 @@ using UnityEngine;
 public class Player : Character
 {
     Animator anim;
+    AudioSource audioSource;
 
     public float MaxStamina;
     public float currentStamina;
+    public AudioClip[] audioClip;
     [HideInInspector]public bool isDie = false;
     void Awake()
     {
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
     protected override void Start()
     {

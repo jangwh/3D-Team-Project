@@ -62,6 +62,12 @@ MonoBehaviour:
   attackInterval: 0
   MaxStamina: 100
   currentStamina: 0
+  audioClip:
+  - {fileID: 8300000, guid: bde0474ab2f938e4c92905a84d749ee6, type: 3}
+  - {fileID: 8300000, guid: 8f4c517c3da46ed47b701edf2c74a5e2, type: 3}
+  - {fileID: 8300000, guid: 7a753c981c41916408626e232b42630c, type: 3}
+  - {fileID: 8300000, guid: 5bd0584eb8f152e47b554f9f1b020ca8, type: 3}
+  - {fileID: 8300000, guid: b53fae4d95860684399d71d61fcdbe34, type: 3}
   isDie: 0
 --- !u!114 &5623254546992856041
 MonoBehaviour:

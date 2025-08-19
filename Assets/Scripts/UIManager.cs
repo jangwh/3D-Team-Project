@@ -64,7 +64,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
             {
                 Inventory.gameObject.SetActive(false);
                 isInventoryOn = false;

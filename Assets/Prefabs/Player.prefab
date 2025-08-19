@@ -61,6 +61,7 @@ MonoBehaviour:
   rotateSpeed: 0
   lastAttackTime: 0
   attackInterval: 0
+  audioSource: {fileID: 0}
   MaxStamina: 100
   currentStamina: 0
   audioClip:
@@ -69,6 +70,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7a753c981c41916408626e232b42630c, type: 3}
   - {fileID: 8300000, guid: 5bd0584eb8f152e47b554f9f1b020ca8, type: 3}
   - {fileID: 8300000, guid: b53fae4d95860684399d71d61fcdbe34, type: 3}
+  - {fileID: 8300000, guid: b8b90befa6d7c834c8c7a92aa83b0b39, type: 3}
+  - {fileID: 8300000, guid: ebd91c2a91e7d504ba2e6b6ee4a69668, type: 3}
+  - {fileID: 8300000, guid: c8d588f12269ec349a2964e5b3f48752, type: 3}
+  - {fileID: 8300000, guid: f702f3e0d22868b47ab49c3e1158938b, type: 3}
+  - {fileID: 8300000, guid: 15e15c79eb6831d4cbd61c3b222a20f4, type: 3}
   isDie: 0
 --- !u!114 &5623254546992856041
 MonoBehaviour:
@@ -85,7 +91,7 @@ MonoBehaviour:
   lockOnRange: 20
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1024
   playerTransform: {fileID: 6106316601062602234}
   CameraTarget: {fileID: 1328938500651347668}
   virtualCamera: {fileID: 0}

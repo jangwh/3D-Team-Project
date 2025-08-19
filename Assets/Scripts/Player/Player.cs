@@ -7,7 +7,7 @@ using UnityEngine;
 public class Player : Character
 {
     Animator anim;
-    AudioSource audioSource;
+    public AudioSource audioSource;
 
     public float MaxStamina;
     public float currentStamina;
@@ -92,5 +92,25 @@ public class Player : Character
     public void OnJumpSound()
     {
         audioSource.PlayOneShot(audioClip[4]);
+    }
+    public void OnSwordSound()
+    {
+        audioSource.PlayOneShot(audioClip[5]);
+    }
+    public void OnAxeSound()
+    {
+        audioSource.PlayOneShot(audioClip[6]);
+    }
+    public void OnRollSound()
+    {
+        audioSource.PlayOneShot(audioClip[7]);
+    }
+    public void OnDrinkSound()
+    {
+        audioSource.PlayOneShot(audioClip[8]);
+    }
+    public void OnDie()
+    {
+        audioSource.PlayOneShot(audioClip[9]);
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WolfAttack2
   m_EditorClassIdentifier: 
   damageMultiplier: 1
-  attackRange: 4
+  attackRange: 6
   attackCooldown: 3
   preAttackDelay: 0.5
   attackDuration: 1.5

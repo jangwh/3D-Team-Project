@@ -42,6 +42,7 @@ public class Monster : Character, IPoolable
     private Animator animator;
     private int currentPatrolIndex = 0;   // 현재 순찰 지점 인덱스
     private MonsterIdleState currentState;    // 현재 몬스터의 행동 상태
+    private MonsterAudio monsterAudio;
 
     //현상태
     private bool isChasing = false;
@@ -61,6 +62,8 @@ public class Monster : Character, IPoolable
     public float healingInterval = 0.5f;
     private Coroutine healingCoroutine;
 
+    
+
     void Awake()
     {
         currentState = initialState; //초기 상태로 설정
@@ -68,6 +71,7 @@ public class Monster : Character, IPoolable
         rigid = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         initialPosition = transform.position;
+        monsterAudio = GetComponent<MonsterAudio>();
 
         foreach (var pattern in attackPatterns)
         {
@@ -158,6 +162,7 @@ public class Monster : Character, IPoolable
     public override void Die()
     {
         StopHealing();
+        monsterAudio.PlayDeathSound();
         base.Die();
         if (isDie) return;
         isDie = true;
@@ -286,7 +291,7 @@ public class Monster : Character, IPoolable
         attackCooldowns[currentAttack] = Time.time;
         
         yield return new WaitForSeconds(currentAttack.preAttackDelay); //선딜
-
+        monsterAudio.PlayAttackSound();
         currentAttack.Execute(this, player); //공격. 히트박스 컨트롤러를 통해서 공격 유지시간을 설정합니다
 
     }
@@ -382,6 +387,7 @@ public class Monster : Character, IPoolable
                 player = hitColliders[0].transform;
                 isChasing = true;
                 print("플레이어를 발견! 추적을 시작합니다.");
+                monsterAudio.PlayChaseSound();
                 animator.SetInteger("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
                 StopHealing();
@@ -414,6 +420,4 @@ public class Monster : Character, IPoolable
             Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
         }
     }
-
-    
 }

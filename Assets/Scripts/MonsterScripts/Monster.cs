@@ -59,7 +59,7 @@ public class Monster : Character, IPoolable
     [Header("체력회복 설정")]
     public float healingAmount = 1f;
     public float healingInterval = 0.5f;
-
+    private Coroutine healingCoroutine;
 
     void Awake()
     {
@@ -126,21 +126,38 @@ public class Monster : Character, IPoolable
             //애니메이션 업데이트 로직
             CurrentSpeed = rigid.velocity.magnitude;
             animator.SetFloat("Speed", CurrentSpeed);
-
-            if (currentHp <= 0)
-            {
-                Die();
-            }
         }
     }
 
-    public void Healing()
+    public void StartHealing()
     {
-        //코루틴으로 구현예정
+        if (healingCoroutine == null) 
+        {
+            StartCoroutine(Healing());
+        }
+    }
+
+    public void StopHealing()
+    {
+        if (healingCoroutine != null)
+        {
+            StopCoroutine(Healing());
+            healingCoroutine = null;
+        }    
+    }
+
+    private IEnumerator Healing()
+    {
+        while (currentHp < maxHp)
+        {
+            yield return new WaitForSeconds(healingInterval);
+            currentHp = Mathf.Min(maxHp, currentHp + healingAmount);
+        }
     }
 
     public override void Die()
     {
+        StopHealing();
         base.Die();
         if (isDie) return;
         isDie = true;
@@ -195,6 +212,8 @@ public class Monster : Character, IPoolable
         {
             attackCooldowns[pattern] = -999f;
         }
+
+        StopHealing();
     }
 
     public void Initialize(MonsterIdleState initialMode, Transform[] specificPatrolPoints)
@@ -351,7 +370,7 @@ public class Monster : Character, IPoolable
                 navMeshAgent.ResetPath();
 
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
-                
+                StartHealing();
             }
         }
         else
@@ -365,6 +384,7 @@ public class Monster : Character, IPoolable
                 print("플레이어를 발견! 추적을 시작합니다.");
                 animator.SetInteger("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
+                StopHealing();
             }
         }
     }

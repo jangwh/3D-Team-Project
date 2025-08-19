@@ -73,4 +73,24 @@ public class Player : Character
         LeanPool.Despawn(this);
         UIManager.Instance.GameOver.SetActive(true);
     }
+    public void OnFootSoundOne()
+    {
+        audioSource.PlayOneShot(audioClip[0]);
+    }
+    public void OnFootSoundTwo()
+    {
+        audioSource.PlayOneShot(audioClip[1]);
+    }
+    public void OnRunSoundOne()
+    {
+        audioSource.PlayOneShot(audioClip[2]);
+    }
+    public void OnRunSoundTwo()
+    {
+        audioSource.PlayOneShot(audioClip[3]);
+    }
+    public void OnJumpSound()
+    {
+        audioSource.PlayOneShot(audioClip[4]);
+    }
 }

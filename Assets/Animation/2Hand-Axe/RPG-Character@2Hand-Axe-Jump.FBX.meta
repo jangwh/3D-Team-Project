@@ -745,8 +745,8 @@ ModelImporter:
       (83.3%) Frame 15\n\tLeftLowerArm average position error 3.1 mm and maximum
       position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tLeftHand average position
       error 3.1 mm and maximum position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tRightUpperArm
-      average position error 3.1 mm and maximum position error 4.9 mm at time 0:15
-      (83.3%) Frame 15\n\tRightLowerArm average position error 3.1 mm and maximum
+      average position error 3.1 mm and maximum position error 4.9 mm at time 0:16
+      (88.9%) Frame 16\n\tRightLowerArm average position error 3.1 mm and maximum
       position error 4.9 mm at time 0:16 (88.9%) Frame 16\n\tRightHand average position
       error 3.1 mm and maximum position error 4.9 mm at time 0:15 (83.3%) Frame 15\n\tHead
       average position error 3.1 mm and maximum position error 4.9 mm at time 0:16
@@ -787,7 +787,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.99452055
+      - time: 0.32333332
+        functionName: OnJumpSound
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
         functionName: Landing
         data: 
         objectReferenceParameter: {instanceID: 0}

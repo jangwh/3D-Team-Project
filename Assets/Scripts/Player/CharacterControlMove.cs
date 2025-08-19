@@ -18,8 +18,8 @@ public class CharacterControllerMove : MonoBehaviour
     private bool canMove = true;
     private bool isRollDodge = false;
 
-    private float currentSpeed; 
-    private float rawSpeed; 
+    private float currentSpeed;
+    private float rawSpeed;
 
     private float gravityVelocity;
 
@@ -28,8 +28,8 @@ public class CharacterControllerMove : MonoBehaviour
 
     public float lookUpSpeed;
 
-    public float canTargetMaxHeight; 
-    public float canTargetMinHeight; 
+    public float canTargetMaxHeight;
+    public float canTargetMinHeight;
     private MouseControl mouseControl;
 
     void Awake()
@@ -60,7 +60,7 @@ public class CharacterControllerMove : MonoBehaviour
     {
         if (player.currentStamina < player.MaxStamina)
         {
-            if (isBattle) 
+            if (isBattle)
             {
                 UIManager.Instance.TakeStemina(-5 * Time.deltaTime);
                 player.currentStamina += 5 * Time.deltaTime;
@@ -109,7 +109,7 @@ public class CharacterControllerMove : MonoBehaviour
         {
             anim.SetFloat("XDir", x);
             anim.SetFloat("YDir", z);
-            anim.SetFloat("Speed", rawSpeed); 
+            anim.SetFloat("Speed", rawSpeed);
         }
         else
         {

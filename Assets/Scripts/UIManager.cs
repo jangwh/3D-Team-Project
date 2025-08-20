@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public GameObject GameOver;
     public GameObject ItemGetAsk;
     public GameObject PressG;
+    public GameObject ESCMenu;
     public MouseControl mouseControl;
 
     [HideInInspector] public float UImaxHp;
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public float UImaxStamina;
     [HideInInspector] public float UIcurrentStamina;
     [HideInInspector] public bool isInventoryOn;
+    [HideInInspector] public bool isESCMenuOn;
 
     void Awake()
     {
@@ -46,10 +48,29 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         InvetoryOnOff();
+        ESCMenuOnOff();
         backHpBar.fillAmount = 1;
         backSteminaBar.fillAmount = 1;
     }
-
+    void ESCMenuOnOff()
+    {
+        if(!isESCMenuOn)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                ESCMenu.SetActive(true);
+                isESCMenuOn = true;
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                ESCMenu.SetActive(false);
+                isESCMenuOn = false;
+            }
+        }
+    }
     void InvetoryOnOff()
     {
         if (!isInventoryOn)

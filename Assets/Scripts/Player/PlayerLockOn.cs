@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -29,20 +29,25 @@ public class PlayerLockOn : MonoBehaviour
 
         if (isLockedOn && currentTarget != null)
         {
-            // ÇÃ·¹ÀÌ¾î°¡ Å¸°ÙÀ» ¹Ù¶óº½
+            // í”Œë ˆì´ì–´ê°€ íƒ€ê²Ÿì„ ë°”ë¼ë´„
             Vector3 dir = currentTarget.transform.position - playerTransform.position;
             dir.y = 0;
             playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * 5f);
 
-            // Å¸°Ù ÀüÈ¯
+            // íƒ€ê²Ÿ ì „í™˜
             if (Input.GetKeyDown(KeyCode.LeftArrow))
                 SwitchTarget(-1);
             else if (Input.GetKeyDown(KeyCode.RightArrow))
                 SwitchTarget(1);
 
-            // ¶ô¿Â ¸¶Ä¿ À§Ä¡ °»½Å
+            // ë½ì˜¨ ë§ˆì»¤ ìœ„ì¹˜ ê°±ì‹ 
             if (lockOnMarker)
                 lockOnMarker.transform.position = Camera.main.WorldToScreenPoint(currentTarget.lockOnPoint.position);
+
+            if (currentTarget.monster.isDie)
+            {
+                Unlock();
+            }
         }
     }
 
@@ -60,7 +65,7 @@ public class PlayerLockOn : MonoBehaviour
 
         if (enemies.Count == 0) return;
 
-        // °¡Àå °¡±î¿î Å¸°Ù
+        // ê°€ì¥ ê°€ê¹Œìš´ íƒ€ê²Ÿ
         enemies.Sort((a, b) =>
             Vector3.Distance(transform.position, a.transform.position)
             .CompareTo(Vector3.Distance(transform.position, b.transform.position)));
@@ -77,7 +82,7 @@ public class PlayerLockOn : MonoBehaviour
         if (virtualCamera != null)
             virtualCamera.LookAt = target.lockOnPoint;
 
-        // ¶ô¿Â ¸¶Ä¿ »ı¼º
+        // ë½ì˜¨ ë§ˆì»¤ ìƒì„±
         if (lockOnMarkerPrefab != null)
             lockOnMarker = Instantiate(lockOnMarkerPrefab, Vector3.zero, Quaternion.identity, GameObject.Find("Canvas").transform);
     }

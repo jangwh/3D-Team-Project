@@ -17,6 +17,9 @@ public class Monster : Character, IPoolable
     [Header("원본 프리펩")] //몬스터 스폰할 때 사용합니다.
     public GameObject myPrefab;
 
+    [Header("UI설정")]
+    public Transform uIPoint;
+
     [Header("몬스터 설정")]
     public MonsterIdleState initialState = MonsterIdleState.Idle; // 초기 상태 (대기 또는 순찰)
 
@@ -52,6 +55,7 @@ public class Monster : Character, IPoolable
     public bool isDie = false;
     private Vector3 initialPosition;
     public bool isStun = false;
+    public bool isBoss = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
@@ -94,7 +98,7 @@ public class Monster : Character, IPoolable
         navMeshAgent.updateRotation = true;
 
         navMeshAgent.speed = moveSpeed;
-        navMeshAgent.angularSpeed = rotateSpeed;
+        navMeshAgent.angularSpeed = rotateSpeed;        
     }
 
     void Update()
@@ -162,6 +166,14 @@ public class Monster : Character, IPoolable
     public override void Die()
     {
         StopHealing();
+        if (isBoss)
+        {
+            BossHealthBar.Instance.HideBossUI();
+        }
+        else
+        {
+            MonsterHealthBarManager.Instance.HideHealthBar(this);
+        }
         monsterAudio.PlayDeathSound();
         base.Die();
         if (isDie) return;
@@ -376,6 +388,10 @@ public class Monster : Character, IPoolable
 
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
                 StartHealing();
+                if (!isBoss)
+                {
+                    MonsterHealthBarManager.Instance.HideHealthBar(this);
+                }
             }
         }
         else
@@ -391,6 +407,14 @@ public class Monster : Character, IPoolable
                 animator.SetInteger("IdleState", 1);
                 StartCoroutine(StopAndResume(chaseStateChangeWaitTime));
                 StopHealing();
+                if (isBoss)
+                {
+                    BossHealthBar.Instance.ShowBossUI(this);
+                }
+                else
+                {
+                    MonsterHealthBarManager.Instance.ShowHealthBar(this);
+                }
             }
         }
     }

@@ -51,6 +51,7 @@ public class Monster : Character, IPoolable
     public bool isDie = false;
     private Vector3 initialPosition;
     public bool isStun = false;
+    public bool isBoss = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
     private int currentAttackIndex = 0;
@@ -59,7 +60,6 @@ public class Monster : Character, IPoolable
     [Header("체력회복 설정")]
     public float healingAmount = 1f;
     public float healingInterval = 0.5f;
-
 
     void Awake()
     {
@@ -150,6 +150,12 @@ public class Monster : Character, IPoolable
         }
         animator.SetTrigger("Die"); //애니메이션 이벤트로 SpawnItem()메서드를 불러온다.
         SpawnItem();
+
+        if (isBoss)
+        {
+            GameClearCheck gameclear = GetComponent<GameClearCheck>();
+            gameclear.GameClear();
+        }
     }
 
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
@@ -394,6 +400,4 @@ public class Monster : Character, IPoolable
             Gizmos.DrawWireSphere(transform.position, attackPatterns[currentAttackIndex].attackRange);
         }
     }
-
-    
 }

@@ -5,11 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GamePlaySceneManager : MonoBehaviour
 {
-    public void OnGameReturn()
-    {
-        UIManager.Instance.ESCMenu.SetActive(false);
-        UIManager.Instance.isESCMenuOn = false;
-    }
     public void ReturnToTitle()
     {
         SceneManager.LoadScene("GameStart");
@@ -18,5 +13,4 @@ public class GamePlaySceneManager : MonoBehaviour
     {
         Application.Quit();
     }
-
 }

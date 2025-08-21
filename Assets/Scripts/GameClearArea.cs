@@ -16,17 +16,17 @@ public class GameClearArea : MonoBehaviour
         playerDistance = (transform.position - GameManager.Instance.player.transform.position).magnitude;
         if (playerDistance < 1.5f)
         {
-            UIManager.Instance.PressG.SetActive(true);
-            UIManager.Instance.PressG.GetComponentInChildren<TextMeshProUGUI>().text = "G키를 누르면 다음회차를 진행합니다.";
+            UIManager.Instance.ClearNotice.SetActive(true);
+            UIManager.Instance.ClearNotice.GetComponentInChildren<TextMeshProUGUI>().text = "G키를 누르면 다음회차를 진행합니다.";
             if (Input.GetKeyDown(KeyCode.G))
             {
-                UIManager.Instance.PressG.SetActive(false);
+                UIManager.Instance.ClearNotice.SetActive(false);
                 SceneManager.LoadSceneAsync("GameLoad");
             }
         }
         else
         {
-            UIManager.Instance.PressG.SetActive(false);
+            UIManager.Instance.ClearNotice.SetActive(false);
         }
     }
 }

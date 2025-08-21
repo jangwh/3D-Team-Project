@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public GameObject ItemGetAsk;
     public GameObject PressG;
     public GameObject ESCMenu;
+    public GameObject ClearNotice;
     public MouseControl mouseControl;
 
     [HideInInspector] public float UImaxHp;

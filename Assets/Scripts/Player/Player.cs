@@ -13,6 +13,7 @@ public class Player : Character
     public float currentStamina;
     public AudioClip[] audioClip;
     [HideInInspector]public bool isDie = false;
+    [HideInInspector]public bool canRevive = false;
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -66,12 +67,14 @@ public class Player : Character
         UIManager.Instance.frontSteminaBar.fillAmount = 1;
         anim.SetLayerWeight(1, 0);
         isDie = false;
+        canRevive = false;
     }
     IEnumerator DieAnimation()
     {
         yield return new WaitForSeconds(1f);
         LeanPool.Despawn(this);
         UIManager.Instance.GameOver.SetActive(true);
+        canRevive = true;
     }
     public void OnFootSoundOne()
     {

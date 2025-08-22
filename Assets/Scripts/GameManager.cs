@@ -43,11 +43,11 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        Invoke("Revive", 1.5f);
+        Revive();
     }
     void Revive()
     {
-        if (player.isDie && Input.anyKeyDown)
+        if (player.isDie && player.canRevive && Input.anyKeyDown)
         {
             town.SetActive(true);
             UIManager.Instance.GameOver.SetActive(false);

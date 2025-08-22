@@ -15,7 +15,7 @@ MonoBehaviour:
   damageMultiplier: 1.5
   attackRange: 10
   attackCooldown: 10
-  preAttackDelay: 0.5
+  preAttackDelay: 1
   attackDuration: 0.5
   hitboxNames:
   - Howling

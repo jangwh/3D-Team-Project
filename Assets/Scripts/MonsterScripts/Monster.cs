@@ -45,8 +45,10 @@ public class Monster : Character, IPoolable
     private int currentPatrolIndex = 0;   // 현재 순찰 지점 인덱스
     private MonsterIdleState currentState;    // 현재 몬스터의 행동 상태
     private MonsterAudio monsterAudio;
+    public SkinnedMeshRenderer skinnedMeshRenderer;
+    private Color originColor; 
 
-    //현상태
+    [Header("현재 상태")]
     private bool isChasing = false;
     private bool isWaiting = false;
     private bool isAttacking = false;
@@ -57,7 +59,7 @@ public class Monster : Character, IPoolable
     public bool isBoss = false;
 
     private Dictionary<AttackPatternSO, float> attackCooldowns = new Dictionary<AttackPatternSO, float>();
-    private int currentAttackIndex = 0;
+    public int currentAttackIndex = 0;
     private int dropran;
 
     [Header("체력회복 설정")]
@@ -78,6 +80,7 @@ public class Monster : Character, IPoolable
         {
             attackCooldowns[pattern] = -999f;
         }
+        originColor = skinnedMeshRenderer.material.color;
     }
 
     protected override void Start()
@@ -160,6 +163,21 @@ public class Monster : Character, IPoolable
         }
     }
 
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        animator.SetTrigger("Hit");
+        StartCoroutine(HitFlash());
+    }
+
+    IEnumerator HitFlash()
+    {
+        if (skinnedMeshRenderer == null) yield break;
+        skinnedMeshRenderer.material.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        skinnedMeshRenderer.material.color = originColor;
+    }
+
     public override void Die()
     {
         StopHealing();
@@ -192,7 +210,7 @@ public class Monster : Character, IPoolable
     public void DespawnEvent() //Die애니메이션이 끝나면 에니메이션 이벤트에서 불러옵니다.
     {
         SpawnItem();
-        LeanPool.Despawn(gameObject); //TODO : ObjectManager.cs에 몬스터 등록하는 로직 필요.
+        LeanPool.Despawn(gameObject);
     }
 
     public void SpawnItem()

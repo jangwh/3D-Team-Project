@@ -1663,6 +1663,7 @@ GameObject:
   - component: {fileID: 6761618117518766748}
   - component: {fileID: 7157274570431481194}
   - component: {fileID: 980126659809885844}
+  - component: {fileID: 5012998747090685321}
   m_Layer: 0
   m_Name: Shop-NPC
   m_TagString: Untagged
@@ -1678,7 +1679,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7799026705074474057}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.010540532, z: -0, w: 0.99994445}
+  m_LocalRotation: {x: 0, y: -0.010541615, z: 0, w: 0.99994445}
   m_LocalPosition: {x: 177.86575, y: 922.78, z: 277.8812}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1791,8 +1792,36 @@ MonoBehaviour:
   navMeshAgent: {fileID: 0}
   notification: {fileID: 0}
   store: {fileID: 0}
-  mouseControl: {fileID: 0}
+  inventory: {fileID: 0}
 --- !u!114 &980126659809885844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7799026705074474057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e0ed4cd3258cbd44a54f9424f8533ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  mainCamera: {fileID: 0}
+  ikHands: {fileID: 0}
+  ladder: {fileID: 0}
+  cliff: {fileID: 0}
+  target: {fileID: 0}
+  animationSpeed: 1
+  headLook: 0
+  idleAlert: 1
+  isNearCliff: 0
+  isNearLadder: 0
+  isSitting: 0
+  isSpecial: 0
+  isTalking: 0
+  rightWeapon: 0
+  leftWeapon: 0
+--- !u!114 &5012998747090685321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

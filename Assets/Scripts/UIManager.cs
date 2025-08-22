@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     public GameObject PressG;
     public GameObject ESCMenu;
     public GameObject ClearNotice;
+    public GameObject keySettingImage;
     public MouseControl mouseControl;
 
     [HideInInspector] public float UImaxHp;
@@ -69,6 +70,10 @@ public class UIManager : MonoBehaviour
             {
                 ESCMenu.SetActive(false);
                 isESCMenuOn = false;
+                if(keySettingImage)
+                {
+                    keySettingImage.SetActive(false);
+                }
             }
         }
     }

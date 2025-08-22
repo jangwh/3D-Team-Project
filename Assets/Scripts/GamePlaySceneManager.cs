@@ -9,6 +9,10 @@ public class GamePlaySceneManager : MonoBehaviour
     {
         SceneManager.LoadScene("GameStart");
     }
+    public void KeySetting()
+    {
+        UIManager.Instance.keySettingImage.SetActive(true);
+    }
     public void OnGameQuit()
     {
         Application.Quit();

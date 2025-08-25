@@ -56,6 +56,7 @@ public class Player : Character
             {
                 Destroy(GameManager.Instance.playerLockOn.lockOnMarker);
             }
+            BossHealthBar.Instance.HideBossUI();
             StartCoroutine(DieAnimation());
         }
     }

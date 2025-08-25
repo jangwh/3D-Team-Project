@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
             var spawnedPlayer = ObjectManager.Instance.SpawnPlayer(RespawnPos.position);
             
             SetPlayerReferences(spawnedPlayer);
+            RenderSettings.skybox = skyboxMaterial;
             UIManager.Instance.frontHpBar.fillAmount = 1;
             UIManager.Instance.frontSteminaBar.fillAmount = 1;
             player.Init();

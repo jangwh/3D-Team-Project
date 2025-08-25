@@ -41,7 +41,10 @@ public class BossHealthBar : MonoBehaviour //보스 UI에 부착하는 스크립
 
     public void HideBossUI()
     {
-        gameObject.SetActive(false);
-        currentBoss = null;
+        if (bossHealthSLider)
+        {
+            gameObject.SetActive(false);
+            currentBoss = null;
+        }
     }
 }

@@ -40,7 +40,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         GuardBox.enabled = false;
-        mouseControl = GetComponent<MouseControl>();
+        mouseControl = FindAnyObjectByType<MouseControl>();
         
     }
     void Start()

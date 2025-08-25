@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
 {
-    private List<ItemStatus> items = new List<ItemStatus>(); //�������� ������ ����Ʈ
+    private List<ItemStatus> items = new List<ItemStatus>(); 
     private List<ItemStatus> rememberedItems = new List<ItemStatus>();
     public List<ItemData> shoppingCartItems = new List<ItemData>();
     public static InventoryManager Instance { get; private set; }
@@ -15,8 +16,8 @@ public class InventoryManager : MonoBehaviour
     public static List<ItemData> ShoppingCartItems =>
         Instance.shoppingCartItems;
 
-    public ItemSlot focusedSlot; //���콺�� �ö� ����
-    public ItemSlot selectedSlot; //�巡�׸� ������ ����
+    public ItemSlot focusedSlot; 
+    public ItemSlot selectedSlot;
     
     void Awake()
     {
@@ -40,16 +41,16 @@ public class InventoryManager : MonoBehaviour
         {
             Player player = FindObjectOfType<Player>();
 
-            // ù ��° ���� ã��
+            
             ItemStatus potion = Items.Find(i => i is ConsumableStatus);
             if (potion != null)
             {
-                // ���� ���
+                
                 UIManager.Instance.Inventory.PortionUse(potion);
             }
             else
             {
-                // ������ ���� �� �ִϸ��̼�
+                
                 player.GetComponent<Animator>().SetTrigger("NoPotion");
             }
         }
@@ -68,9 +69,9 @@ public class InventoryManager : MonoBehaviour
 
     public static void RememberItem(ItemStatus obj)     //상점 슬롯에 넣었을 때
     {
-        if (!Instance.rememberedItems.Contains(obj))
+        if (!RememberedItems.Contains(obj))
         {
-            Instance.rememberedItems.Add(obj);
+            RememberedItems.Add(obj);
             RemoveItem(obj); 
             Debug.Log($"{obj.Data.itemName}을 판매 슬롯에 배치했습니다.");
         }
@@ -92,6 +93,7 @@ public class InventoryManager : MonoBehaviour
             Debug.Log($"{item.Data.itemName} 을 판매했습니다.");
         }
         Instance.rememberedItems.Clear();
+        Refresh();
     }
 
     public static void BuyShoppingCart()
@@ -123,7 +125,6 @@ public class InventoryManager : MonoBehaviour
     {
         UIManager.Instance.Inventory.Refresh(Instance.items);
 
-        // ���� �̹��� �ڵ� ����
         ConsumableStatus potion = Items.Find(i => i is ConsumableStatus) as ConsumableStatus;
         if (potion != null)
         {

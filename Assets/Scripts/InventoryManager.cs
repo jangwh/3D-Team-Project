@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    private List<ItemStatus> items = new List<ItemStatus>(); //º¸À¯ÁßÀÎ ¾ÆÀÌÅÛ ¸®½ºÆ®
+    private List<ItemStatus> items = new List<ItemStatus>(); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
+    private List<ItemStatus> rememberedItems = new List<ItemStatus>();
+    public List<ItemData> shoppingCartItems = new List<ItemData>();
     public static InventoryManager Instance { get; private set; }
     public static List<ItemStatus> Items => Instance.items;
+    public static List<ItemStatus> RememberedItems => Instance.rememberedItems;
 
-    public ItemSlot focusedSlot; //¸¶¿ì½º°¡ ¿Ã¶ó°£ ½½·Ô
-    public ItemSlot selectedSlot; //µå·¡±×¸¦ ½ÃÀÛÇÑ ½½·Ô
+    public static List<ItemData> ShoppingCartItems =>
+        Instance.shoppingCartItems;
 
+    public ItemSlot focusedSlot; //ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½Ã¶ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public ItemSlot selectedSlot; //ï¿½å·¡ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    
     void Awake()
     {
         if (Instance == null)
@@ -33,16 +40,16 @@ public class InventoryManager : MonoBehaviour
         {
             Player player = FindObjectOfType<Player>();
 
-            // Ã¹ ¹øÂ° Æ÷¼Ç Ã£±â
+            // Ã¹ ï¿½ï¿½Â° ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
             ItemStatus potion = Items.Find(i => i is ConsumableStatus);
             if (potion != null)
             {
-                // Æ÷¼Ç »ç¿ë
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 UIManager.Instance.Inventory.PortionUse(potion);
             }
             else
             {
-                // Æ÷¼ÇÀÌ ¾øÀ» ¶§ ¾Ö´Ï¸ÞÀÌ¼Ç
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
                 player.GetComponent<Animator>().SetTrigger("NoPotion");
             }
         }
@@ -52,11 +59,71 @@ public class InventoryManager : MonoBehaviour
         Instance.items.Add(obj.status);
         Destroy(obj.gameObject);
     }
+
+    public static void RemoveItem(ItemStatus obj)
+    {
+        Instance.items.Remove(obj);
+        Refresh();
+    }
+
+    public static void RememberItem(ItemStatus obj)     //ìƒì  ìŠ¬ë¡¯ì— ë„£ì—ˆì„ ë•Œ
+    {
+        if (!Instance.rememberedItems.Contains(obj))
+        {
+            Instance.rememberedItems.Add(obj);
+            RemoveItem(obj); 
+            Debug.Log($"{obj.Data.itemName}ì„ íŒë§¤ ìŠ¬ë¡¯ì— ë°°ì¹˜í–ˆìŠµë‹ˆë‹¤.");
+        }
+        
+    }
+
+    public static void ShoppingCart(DragMe2 obj)
+    {
+        if (obj.itemData != null)
+        {
+            Instance.shoppingCartItems.Add(obj.itemData);
+        }
+    }
+
+    public static void SellRememberedItems()        //íŒë§¤ í™•ì •
+    {
+        foreach (var item in Instance.rememberedItems)
+        {
+            Debug.Log($"{item.Data.itemName} ì„ íŒë§¤í–ˆìŠµë‹ˆë‹¤.");
+        }
+        Instance.rememberedItems.Clear();
+    }
+
+    public static void BuyShoppingCart()
+    {
+        foreach (var data in Instance.shoppingCartItems)
+        {
+            if (data == null) continue; // ë°©ì–´ ì½”ë“œ
+
+            ItemStatus newItem = new ItemStatus(data); // ItemData â†’ ItemStatus ë³€í™˜
+            Debug.Log($"{data.itemName} ì„ êµ¬ë§¤í–ˆìŠµë‹ˆë‹¤.");
+            Instance.items.Add(newItem);
+        }
+        Instance.shoppingCartItems.Clear();
+        Refresh();
+    }
+
+    public static void CancelSale()
+    {
+        foreach (var item in Instance.rememberedItems)
+        {
+            Items.Add(item);
+            Debug.Log($"{item.Data.itemName} ì„ ë‹¤ì‹œ ì¸ë²¤í† ë¦¬ì— ëŒë ¤ë†¨ìŠµë‹ˆë‹¤.");
+        }
+        Instance.rememberedItems.Clear();
+        Refresh();
+    }
+    
     public static void Refresh()
     {
         UIManager.Instance.Inventory.Refresh(Instance.items);
 
-        // Æ÷¼Ç ÀÌ¹ÌÁö ÀÚµ¿ °»½Å
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
         ConsumableStatus potion = Items.Find(i => i is ConsumableStatus) as ConsumableStatus;
         if (potion != null)
         {
@@ -85,6 +152,6 @@ public class InventoryManager : MonoBehaviour
         Items[focusedIndex] = temp;
 
         Refresh();
-        print($"{Instance.selectedSlot.Item.Data.itemName}°ú {Instance.focusedSlot.Item.Data.itemName}À§Ä¡¸¦ ¹Ù²Ü ¿¹Á¤");
+        print($"{Instance.selectedSlot.Item.Data.itemName}ï¿½ï¿½ {Instance.focusedSlot.Item.Data.itemName}ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 }

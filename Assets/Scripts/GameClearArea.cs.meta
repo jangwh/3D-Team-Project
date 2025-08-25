@@ -1,3 +1,4 @@
+<<<<<<<< HEAD:Assets/Scripts/GameClearArea.cs.meta
 fileFormatVersion: 2
 guid: 8ec5b05096c6492499f115f467957bbf
 MonoImporter:
@@ -9,3 +10,16 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+========
+fileFormatVersion: 2
+guid: c97777acfb1e3400b91e781df1c05cea
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>>> origin/store-making:Assets/Scripts/MonsterScripts/Map.cs.meta

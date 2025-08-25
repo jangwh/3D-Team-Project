@@ -5,9 +5,9 @@ using UnityEngine;
 using static UnityEditor.Progress;
 
 public class InventoryManager : MonoBehaviour
-{
-    private List<ItemStatus> items = new List<ItemStatus>(); 
-    private List<ItemStatus> rememberedItems = new List<ItemStatus>();
+{ 
+    public List<ItemStatus> items = new List<ItemStatus>(); 
+    public List<ItemStatus> rememberedItems = new List<ItemStatus>();
     public List<ItemData> shoppingCartItems = new List<ItemData>();
     public static InventoryManager Instance { get; private set; }
     public static List<ItemStatus> Items => Instance.items;
@@ -69,13 +69,25 @@ public class InventoryManager : MonoBehaviour
 
     public static void RememberItem(ItemStatus obj)     //상점 슬롯에 넣었을 때
     {
+        // Null check to prevent issues when called from DragMe or elsewhere
+        if (obj == null)
+        {
+            Debug.LogWarning("Tried to remember a null item.");
+            return;
+        }
+
+        // Remove from items if present
+        if (Items.Contains(obj))
+        {
+            Items.Remove(obj);
+        }
+        // Only add to rememberedItems if not already present
         if (!RememberedItems.Contains(obj))
         {
             RememberedItems.Add(obj);
-            RemoveItem(obj); 
             Debug.Log($"{obj.Data.itemName}을 판매 슬롯에 배치했습니다.");
         }
-        
+        Refresh();
     }
 
     public static void ShoppingCart(DragMe2 obj)

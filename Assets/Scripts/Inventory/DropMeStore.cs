@@ -12,6 +12,8 @@ public class DropMeStore : MonoBehaviour, IDropHandler
     public Sprite defaultImage;
     public TextMeshProUGUI itemInfoText;
     public TextMeshProUGUI amountText;
+    public Button buyButton;
+    public Button sellButton;
 
     private Color normalColor;
     private ItemStatus storedItem;   // 슬롯에 저장된 아이템
@@ -34,6 +36,7 @@ public class DropMeStore : MonoBehaviour, IDropHandler
             receivingImage.overrideSprite =
                 dragMe2.GetComponent<Image>().sprite;
             InventoryManager.ShoppingCart(dragMe2);  
+            sellButton.interactable = false;
         }
         
         DragMe dragMe = eventData.pointerDrag?.GetComponent<DragMe>();
@@ -44,6 +47,8 @@ public class DropMeStore : MonoBehaviour, IDropHandler
             receivingImage.overrideSprite = dragMe.GetComponent<Image>().sprite;
             amountText.text = dragMe.item.amount.ToString();
             itemInfoText.text = dragMe.item.ToTooltipText();
+
+            buyButton.interactable = false;
 
             // 인벤토리에서 제거 + 기억
             InventoryManager.RememberItem(dragMe.item);
@@ -62,6 +67,8 @@ public class DropMeStore : MonoBehaviour, IDropHandler
 
         InventoryManager.SellRememberedItems();
         ClearSlot();
+        sellButton.interactable = true;
+        buyButton.interactable = true;
     }
 
     // 취소 버튼
@@ -71,12 +78,16 @@ public class DropMeStore : MonoBehaviour, IDropHandler
 
         InventoryManager.CancelSale();
         ClearSlot();
+        sellButton.interactable = true;
+        buyButton.interactable = true;
     }
 
     public void OnClickBuy()
     {
         InventoryManager.BuyShoppingCart();
         ClearSlot();
+        sellButton.interactable = true;
+        buyButton.interactable = true;
     }
 
     private void ClearSlot()

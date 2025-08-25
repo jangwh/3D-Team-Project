@@ -47,14 +47,7 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
             return;
         }
 
-        // 슬롯 번호 범위 확인
-        if (slot.itemNumber < 0 || slot.itemNumber >= InventoryManager.Items.Count)
-        {
-            Debug.LogWarning($"Invalid slot index: {slot.itemNumber}");
-            item = null;
-            eventData.pointerDrag = null;
-            return;
-        }
+        
 
         // 안전하게 아이템 가져오기
         item = InventoryManager.Items[slot.itemNumber];

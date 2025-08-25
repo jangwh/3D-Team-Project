@@ -40,7 +40,23 @@ public class CharacterControllerMove : MonoBehaviour
     }
     void Update()
     {
-        if (mouseControl.isStoreOn) return;
+        if (mouseControl.isStoreOn)
+        {
+            // 이동 정지
+            currentSpeed = 0f;
+            rawSpeed = 0f;
+            gravityVelocity = 0f;
+
+            // CharacterController 이동 멈춤
+            charCtrl.Move(Vector3.zero);
+
+            // 애니메이션 idle로 전환
+            anim.SetFloat("XDir", 0f);
+            anim.SetFloat("YDir", 0f);
+            anim.SetFloat("Speed", 0f);
+
+            return;
+        }
         if (player.isDie) return;
         if (!canMove) return;
         MouseMove();

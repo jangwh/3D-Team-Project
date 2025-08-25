@@ -33,12 +33,15 @@ public class WeaponSwapAndAttack : MonoBehaviour
     private float inputBufferTimer = 0f;
 
     private int currentWeaponIndex = 0;
+    private MouseControl mouseControl;
 
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         GuardBox.enabled = false;
+        mouseControl = GetComponent<MouseControl>();
+        
     }
     void Start()
     {
@@ -47,6 +50,7 @@ public class WeaponSwapAndAttack : MonoBehaviour
     }
     void Update()
     {
+        if (mouseControl.isStoreOn) return;
         if (player.isDie) return;
         if (player.currentStamina <= 0)
         {

@@ -22,7 +22,7 @@ MonoBehaviour:
   damage: 70
   weaponName: Axe
   controllers: {fileID: 9100000, guid: ef20c8a5a49dd3a4dae52491fef2a5a8, type: 2}
-  weaponPrefab: {fileID: 4118012015705906230, guid: d74a38d70ec09944fbaf93ad4f545072, type: 3}
+  weaponPrefab: {fileID: 4118012015705906230, guid: d16b452a37dbd49ad8ffc688a3d04f03, type: 3}
   weaponSprite: {fileID: 21300000, guid: 4f0a931cfe8583c4a89e4385f1ba687a, type: 3}
   amberAttackComboAnimationNames:
   - 2Hand-Axe-Attack3

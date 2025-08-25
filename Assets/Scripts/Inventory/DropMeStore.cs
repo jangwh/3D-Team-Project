@@ -3,178 +3,90 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Timeline.Actions;
 
-public class DropMeStore : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class DropMeStore : MonoBehaviour, IDropHandler
 {
     public Image containerImage;
     public Image receivingImage;
-    public Color highlightColor = Color.yellow;
     public Sprite defaultImage;
     public TextMeshProUGUI itemInfoText;
     public TextMeshProUGUI amountText;
 
     private Color normalColor;
-
-    public DragMe lastMovedDragMe;
-    public Sprite storedSprite;
-    public int dragMeOriginalAmount; // 마지막 DragMe amount 저장
-    public bool hasSavedState = false;
-
-    public int storedAmount = 0;
+    private ItemStatus storedItem;   // 슬롯에 저장된 아이템
 
     private void OnEnable()
     {
         if (containerImage != null)
             normalColor = containerImage.color;
 
-        storedAmount = 0;
-        UpdateAmountText(storedAmount);
-        if (receivingImage != null)
-            receivingImage.overrideSprite = defaultImage;
-        storedSprite = defaultImage;
+        ClearSlot();
     }
 
-    public void OnDrop(PointerEventData data)
+    // 아이템 드롭
+    public void OnDrop(PointerEventData eventData)
     {
-        var dragMe = data.pointerDrag?.GetComponent<DragMe>();
-        if (dragMe == null) return;
-
-        // Clear previous state
-        lastMovedDragMe = null;
-        hasSavedState = false;
-
-        // Save new state
-        lastMovedDragMe = dragMe;
-        storedSprite = dragMe.GetComponent<Image>().sprite;
-        dragMeOriginalAmount = dragMe.item.amount;
-        hasSavedState = true;
-
-        if (receivingImage != null)
-            receivingImage.overrideSprite = storedSprite != null ? storedSprite : dragMe.defaultSprite;
-
-        storedAmount = dragMe.item.amount;
-        UpdateAmountText(storedAmount);
-
-        dragMe.item.amount = 0;
-        dragMe.UpdateAmountText();
-        dragMe.SendMessage("UpdateSpriteIfEmpty", SendMessageOptions.DontRequireReceiver);
-
-        ShowItemInfo(dragMe.item, storedAmount);
-
-        if (containerImage != null)
-            containerImage.color = normalColor;
-    }
-
-    public int ReceiveOneAmount(DragMe dragMe)
-    {
-        if (dragMe == null || dragMe.item == null || dragMe.item.amount <= 0)
-            return 0;
-
-        if (lastMovedDragMe != null && lastMovedDragMe != dragMe)
-            PerformUndo();
-
-        if (!hasSavedState)
+        DragMe2 dragMe2 = eventData.pointerDrag.GetComponent<DragMe2>();
+        if (dragMe2 != null && dragMe2.item != null)
         {
-            lastMovedDragMe = dragMe;
-            storedSprite = dragMe.GetComponent<Image>().sprite;
-            dragMeOriginalAmount = dragMe.item.amount;
-            hasSavedState = true;
+            storedItem = dragMe2.item;
+            receivingImage.overrideSprite =
+                dragMe2.GetComponent<Image>().sprite;
+            InventoryManager.ShoppingCart(dragMe2);  
+        }
+        
+        DragMe dragMe = eventData.pointerDrag?.GetComponent<DragMe>();
+        if (dragMe != null && dragMe.item != null)
+        {
+            // DropMeStore에 저장
+            storedItem = dragMe.item;
+            receivingImage.overrideSprite = dragMe.GetComponent<Image>().sprite;
+            amountText.text = dragMe.item.amount.ToString();
+            itemInfoText.text = dragMe.item.ToTooltipText();
+
+            // 인벤토리에서 제거 + 기억
+            InventoryManager.RememberItem(dragMe.item);
+            InventoryManager.RemoveItem(dragMe.item);
+            
         }
 
-        dragMe.item.amount--;
-        storedAmount++;
-
-        dragMe.UpdateAmountText();
-
-        if (receivingImage != null)
-            receivingImage.overrideSprite = storedSprite != null ? storedSprite : dragMe.defaultSprite;
-
-        UpdateAmountText(storedAmount);
-        ShowItemInfo(dragMe.item, storedAmount);
-
-        if (containerImage != null)
-            containerImage.color = normalColor;
-
-        return 1;
-    }
-
-    public void PerformUndo()
-    {
-        if (lastMovedDragMe == null || !hasSavedState) return;
-
-        // DragMe 원래 상태 복원
-        lastMovedDragMe.item.amount = dragMeOriginalAmount;
-        var dragImage = lastMovedDragMe.GetComponent<Image>();
-        if (dragImage != null)
-            dragImage.sprite = storedSprite;
-        lastMovedDragMe.UpdateAmountText();
-        lastMovedDragMe.UpdateSpriteIfEmpty();
-
-        // DropMeStore 초기화
-        storedAmount = 0;
-        if (receivingImage != null)
-            receivingImage.overrideSprite = defaultImage;
-        if (itemInfoText != null)
-            itemInfoText.text = string.Empty;
-        UpdateAmountText(storedAmount);
-
-        lastMovedDragMe = null;
-        hasSavedState = false;
-        storedSprite = defaultImage;
-    }
-
-    public void ShowItemInfo(ItemStatus itemStatus, int totalAmount, bool fullRefresh = true)
-    {
-        if (itemStatus == null || itemStatus.Data == null) return;
-
-        if (itemInfoText != null)
-        {
-            itemInfoText.text = itemStatus.ToTooltipText();
-            itemInfoText.gameObject.SetActive(true);
-        }
-
-        if (amountText != null)
-            amountText.text = totalAmount.ToString();
-    }
-
-    public void UpdateAmountText(int amount)
-    {
-        if (amountText != null)
-            amountText.text = amount.ToString();
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button != PointerEventData.InputButton.Right) return;
-        PerformUndo();
-    }
-
-    public void OnPointerEnter(PointerEventData data)
-    {
-        if (containerImage == null) return;
-        var dragMe = data.pointerDrag?.GetComponent<DragMe>();
-        if (dragMe != null)
-            containerImage.color = highlightColor;
-    }
-
-    public void OnPointerExit(PointerEventData data)
-    {
         if (containerImage != null)
             containerImage.color = normalColor;
     }
 
-    public void isSellButtonOn()
+    // 판매 버튼
+    public void OnClickSell()
     {
-        lastMovedDragMe = null;
-        hasSavedState = false;
-        storedAmount = 0;
-        storedSprite = defaultImage;
+        if (storedItem == null) return;
 
+        InventoryManager.SellRememberedItems();
+        ClearSlot();
+    }
+
+    // 취소 버튼
+    public void OnClickCancel()
+    {
+        if (storedItem == null) return;
+
+        InventoryManager.CancelSale();
+        ClearSlot();
+    }
+
+    public void OnClickBuy()
+    {
+        InventoryManager.BuyShoppingCart();
+        ClearSlot();
+    }
+
+    private void ClearSlot()
+    {
+        storedItem = null;
         if (receivingImage != null)
             receivingImage.overrideSprite = defaultImage;
-        if (itemInfoText != null)
-            itemInfoText.text = string.Empty;
         if (amountText != null)
             amountText.text = "0";
+        if (itemInfoText != null)
+            itemInfoText.text = string.Empty;
     }
 }

@@ -35,12 +35,12 @@ public class InventoryPannel : MonoBehaviour
         }
         return;
 
-        //for¹®À» »ç¿ëÇÑ ¹æ¹ý
+        //forï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         //for (int i = 0; i < slots.Count; i++)
         //{
         //    if (i >= itemList.Count)
         //    {
-        //        //¾ÆÀÌÅÛÀÌ ¾øÀ¸¹Ç·Î ÀÎº¥Åä¸® ½½·ÔÀ» ºñ¿ò
+        //        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         //        slots[i].Clear();
         //    }
         //    else
@@ -70,7 +70,7 @@ public class InventoryPannel : MonoBehaviour
             }
             else
             {
-                // Æ÷¼ÇÀÌ ¾øÀ» ¶§ ¾Ö´Ï¸ÞÀÌ¼Ç
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½
                 player.GetComponent<Animator>().SetTrigger("NoPotion");
             }
         }

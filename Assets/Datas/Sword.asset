@@ -22,7 +22,7 @@ MonoBehaviour:
   damage: 50
   weaponName: Sword
   controllers: {fileID: 9100000, guid: e373a6068b036824b8836010d31180cc, type: 2}
-  weaponPrefab: {fileID: 1601136731410419248, guid: 134b787a122543747b7c668710f0a9ef, type: 3}
+  weaponPrefab: {fileID: 1601136731410419248, guid: 429d4b65fe152487fa7f76a6e8d062b0, type: 3}
   weaponSprite: {fileID: 21300000, guid: 326fd311cae013d4fac170496ac19817, type: 3}
   amberAttackComboAnimationNames:
   - Sword-Attack-R1

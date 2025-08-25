@@ -6,6 +6,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 {
     public Image icon;
     private ItemStatus item;
+    public int itemNumber;
     public ItemStatus Item
     {
         get => item;
@@ -51,6 +52,24 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandle
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (this == null || this.Item == null)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
+
+        if (this != null && this.itemNumber >= 0 && this.itemNumber < InventoryManager.Items.Count)
+        {
+            item = InventoryManager.Items[this.itemNumber];
+        }
+        else
+        {
+            Debug.LogWarning($"Invalid slot index: {this?.itemNumber}");
+            item = null;
+            eventData.pointerDrag = null;
+            return;
+        }
+
         icon.transform.SetParent(UIManager.Instance.transform);
         InventoryManager.Instance.selectedSlot = this;
         UIManager.Instance.Tooltip.Hide();

@@ -1,4 +1,3 @@
-// DragMe.cs
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public ItemStatus item;   // 드래그되는 아이템 데이터
     public bool dragOnSurfaces = true;
@@ -14,6 +13,10 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     public Sprite defaultSprite;
     [Tooltip("UI Text to show the item amount")]
     public TextMeshProUGUI amountText;
+    private bool isDragging = false;
+    private Vector2 dragStartPos;
+
+    private ItemSlot slot;
 
     [HideInInspector]
     public Sprite currentSprite; // 드래그 시작 시 현재 이미지 저장
@@ -21,6 +24,10 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     private Dictionary<int, GameObject> m_DraggingIcons = new Dictionary<int, GameObject>();
     private Dictionary<int, RectTransform> m_DraggingPlanes = new Dictionary<int, RectTransform>();
 
+    void Start()
+    {
+        slot = GetComponentInParent<ItemSlot>();
+    }
     // 현재 amount를 텍스트에 표시
     public void UpdateAmountText()
     {
@@ -33,13 +40,36 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // 드래그 시작 시 Undo 수행
-        if (targetDrop != null)
-            targetDrop.PerformUndo();
+        // 슬롯과 아이템 존재 여부 확인
+        if (slot == null || slot.Item == null)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
 
-        // 현재 이미지 저장
+        // 슬롯 번호 범위 확인
+        if (slot.itemNumber < 0 || slot.itemNumber >= InventoryManager.Items.Count)
+        {
+            Debug.LogWarning($"Invalid slot index: {slot.itemNumber}");
+            item = null;
+            eventData.pointerDrag = null;
+            return;
+        }
+
+        // 안전하게 아이템 가져오기
+        item = InventoryManager.Items[slot.itemNumber];
+
+        isDragging = true;
+        dragStartPos = eventData.position;
+
+        if (MouseControl.Instance == null || !MouseControl.Instance.isStoreOn)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
+
+        // 드래그 아이콘 생성 및 설정
         currentSprite = GetComponent<Image>().sprite;
-
         var canvas = FindInParents<Canvas>(gameObject);
         if (canvas == null) return;
 
@@ -55,8 +85,15 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
         image.SetNativeSize();
 
         m_DraggingPlanes[eventData.pointerId] = dragOnSurfaces ? transform as RectTransform : canvas.transform as RectTransform;
-
         SetDraggedPosition(eventData);
+
+        ItemStatus selectedItem = InventoryManager.Instance.selectedSlot.Item;
+        int selectedIndex = InventoryManager.Items.IndexOf(selectedItem);
+        item = InventoryManager.Items[selectedIndex];
+        
+        // 드래그 시작 시 판매 취소
+        if (targetDrop != null)
+            InventoryManager.CancelSale();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -79,25 +116,14 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        isDragging = false;
         if (m_DraggingIcons.ContainsKey(eventData.pointerId) && m_DraggingIcons[eventData.pointerId] != null)
             Destroy(m_DraggingIcons[eventData.pointerId]);
 
         m_DraggingIcons[eventData.pointerId] = null;
         UpdateSpriteIfEmpty();
     }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            if (targetDrop != null)
-            {
-                targetDrop.ReceiveOneAmount(this);
-                eventData.Use();
-            }
-        }
-        UpdateSpriteIfEmpty();
-    }
+    
 
     // amount가 0이면 기본 이미지로, 텍스트 갱신
     public void UpdateSpriteIfEmpty()

@@ -1,8 +1,8 @@
 # Dark Ring
 <img width="616" height="335" alt="Image" src="https://github.com/user-attachments/assets/c3c4f0b4-f0d6-4312-ba14-ca07bca75de7" />
 
-#  프로젝트 제목
-DarkRing [3인 개발 프로젝트] My TIL link is https://youtu.be/UxYZ_Yr1PTE
+#  DarkRing
+[3인 개발 프로젝트] My TIL link is https://youtu.be/UxYZ_Yr1PTE
 
 ## 1. 프로젝트 개요
 

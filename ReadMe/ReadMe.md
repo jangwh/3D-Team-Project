@@ -1,0 +1,34 @@
+# Dark Ring
+<img width="616" height="335" alt="Image" src="https://github.com/user-attachments/assets/c3c4f0b4-f0d6-4312-ba14-ca07bca75de7" />
+
+#  프로젝트 제목
+DarkRing [3인 개발 프로젝트] My TIL link is https://youtu.be/UxYZ_Yr1PTE
+
+## 1. 프로젝트 개요
+
+엘든링 레퍼런스로 만든 3D 액션 RPG입니다.
+
+Unity를 활용하여 3D로 제작하였습니다
+
+개발기간 : 2025.08.06 ~ 2525.08.25
+
+## 2. 주요 기능
+   
+2.1 플레이어
+* 일정 시간 안에 입력이 연속으로 들어오면 연속 공격 실행
+* 일정 범위 안에 적이 존재할 시 특정 키 입력으로 락온
+
+2.2 락온
+* 시네머신 카메라를 이용해 시점 조정
+
+2.3 게임시스템
+* 게임시작시 로딩씬, 게임클리어 조건 등 전반적인 시스템설계
+
+## 3. 기술 스택
+   
+* C#
+* Unity
+* Fork + Github(형상 관리)
+* Queue 를 사용하지 않고 제작한 연속 공격
+* Chinemachine 카메라를 이용하여 시점 조정
+* Async를 활용하여 로딩 씬 전환

@@ -2,7 +2,8 @@
 <img width="616" height="335" alt="Image" src="https://github.com/user-attachments/assets/c3c4f0b4-f0d6-4312-ba14-ca07bca75de7" />
 
 #  DarkRing
-[3인 개발 프로젝트] https://youtu.be/UxYZ_Yr1PTE
+[3인 개발 프로젝트] 
+[다크링 플레이 영상](https://youtu.be/UxYZ_Yr1PTE)
 
 ## 1. 프로젝트 개요
 

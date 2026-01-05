@@ -33,7 +33,7 @@ Unity를 활용하여 3D로 제작하였습니다
 
 ## 3. 플로우 차트
 
-<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/311c6aea-0f61-4d73-93fc-542bfd304c40" />
+<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/23d52c92-6211-436d-90e7-7499f2c9cd20" />
 
 -----------------------------------------------------------
 

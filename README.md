@@ -83,10 +83,89 @@ GameManager는 다크링 인게임에서 플레이어 생명주기, 카메라, �
 
 ### 2.2 게임시스템
 
+### [LoadSceneManager](Assets/Scripts/GameLoadSceneManager.cs)
+
+#### 💡 역할
+
+* LoadSceneManager는 인트로 씬에서 메인 씬으로 전환되는 동안 로딩 화면을 유지하며, 씬 활성화 시점을 제어하는 전용 로딩 컨트롤러입니다.
+
+#### 📌 주요 메서드
+
+* Load() : 메인 씬 비동기 로딩 및 활성화 타이밍 제어
+
+### [UIManager](Assets/Scripts/UIManager.cs)
+
+#### 💡 역할
+
+* UIManager는 게임 내 모든 HUD, 메뉴, UI 상태를 통합 관리하며 입력에 따라 UI와 플레이 모드를 전환하는 중앙 UI 컨트롤러입니다.
+  
+#### 📌 주요 메서드
+
+* InvetoryOnOff() : 인벤토리 UI 열기 / 닫기, I 키로 인벤토리 토글
+
+* ESCMenuOnOff() : ESC 메뉴 토글 제어
+
+### [InventoryManager](Assets/Scripts/InventoryManager.cs)
+
+#### 💡 역할
+
+* InventoryManager는 플레이어 인벤토리, 상점 거래, UI 동기화를 일관된 데이터 흐름으로 관리하는 인벤토리 시스템 클래스입니다.
+
+#### 📌 주요 메서드
+
+* Refresh() : 인벤토리 데이터 → UI 동기화, 현재 아이템 목록을 인벤토리 UI에 반영
+
+* PickupItem(ItemObject obj) : 월드에 존재하는 아이템을 인벤토리에 추가, 월드 오브젝트 제거
+
+* RemoveItem(ItemStatus obj) : 인벤토리에서 특정 아이템 제거, UI 즉시 갱신
+
+* RememberItem(ItemStatus obj) : 판매 슬롯에 아이템 임시 등록, 인벤토리에서 아이템 제거, 판매 대기 리스트에 추가
+
+* SellRememberedItems() : 판매 확정, 판매 대기 아이템 전체 처리, 리스트 초기화 후 UI 갱신
+
+* CancelSale() : 판매 취소, 보류 중인 아이템을 다시 인벤토리로 복구, UI 즉시 갱신
+
+* ShoppingCart(DragMe2 obj) : 상점 UI에서 선택한 아이템을 장바구니에 등록
+
+* BuyShoppingCart() : 구매 확정, 장바구니 아이템을 ItemStatus로 변환, 인벤토리에 추가, 장바구니 초기화 및 UI 갱신
+
+### [ConsumableStatus](Assets/Scripts/Inventory/Items/ItemStaus.cs)
+
+#### 💡 역할
+
+* ConsumableStatus는 소비 아이템 데이터를 실제 플레이 효과로 변환하는 클래스입니다.
+  
+#### 📌 주요 메서드
+
+* Use(Player player) : 소비 아이템 사용의 진입점
 
 ### 2.3 상점
 
+### [DragMe2](Assets/Scripts/Inventory/DragMe2.cs)
 
+#### 💡 역할
+
+* DragMe2는 UI 슬롯의 아이템을 실제 데이터 변경 없이 시각적으로 드래그 표현하는 상점 전용 드래그 컨트롤러 클래스입니다.
+
+#### 📌 주요 메서드
+
+* OnBeginDrag(PointerEventData eventData) : 드래그 시작 시 호출되는 메서드
+
+* OnDrag(PointerEventData eventData) : 드래그 중 지속 호출
+
+* SetDraggedPosition(PointerEventData eventData) : 드래그 아이콘 위치 계산 전용 메서드
+
+* OnEndDrag(PointerEventData eventData) : 드래그 종료 시 호출
+
+### [DropMeStore](Assets/Scripts/Inventory/DropMeStore.cs)
+
+#### 💡 역할
+
+* DropMeStore는 드래그된 아이템을 수신해 구매,판매 흐름으로 연결하고, 실제 데이터 변경은 InventoryManager에 위임하는 상점 UI 드롭 처리 클래스입니다.
+
+#### 📌 주요 메서드
+
+* OnDrop(PointerEventData eventData) : 드래그된 아이템의 타입을 판별, 인벤토리일시 판매, 상점일시 구매, 두 흐름을 단일 슬롯에서 처리
 -----------------------------------------------------------
 
 ## 3. 플로우 차트 및 다이어그램

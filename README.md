@@ -55,7 +55,7 @@ Unity를 활용하여 3D로 제작하였습니다
 
 상점 - 다이어그램
 
-
+<img width="670" height="351" alt="Image" src="https://github.com/user-attachments/assets/6e384c2b-49fa-4a31-abb8-e769d191c212" />
 
 -----------------------------------------------------------
 

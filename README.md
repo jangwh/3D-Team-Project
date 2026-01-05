@@ -35,7 +35,7 @@ Unity를 활용하여 3D로 제작하였습니다
 
 3.1 플로우차트
 
-<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/23d52c92-6211-436d-90e7-7499f2c9cd20" />
+<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/9a14ff6e-ed61-493b-82e4-477dbd02be42" />
 
 -----------------------------------------------------------
 

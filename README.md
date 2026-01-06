@@ -180,19 +180,19 @@ GameManager는 다크링 인게임에서 플레이어 생명주기, 카메라, �
 
 플레이어 - 다이어그램
 
-<img width="714" height="473" alt="Image" src="https://github.com/user-attachments/assets/dbdf6b5c-1c1d-4b0b-8f89-864bcc688165" />
+<img width="715" height="473" alt="Image" src="https://github.com/user-attachments/assets/0d3e16a9-022e-40c9-95b3-16201cef23a3" />
 
 -----------------------------------------------------------
 
 게임시스템 - 다이어그램
 
-<img width="1129" height="367" alt="Image" src="https://github.com/user-attachments/assets/2c2abe7c-bfd4-492c-9345-15cf2b7fa049" />
+<img width="1130" height="367" alt="Image" src="https://github.com/user-attachments/assets/a1f33f05-7ca5-4592-99d5-600cf889308d" />
 
 -----------------------------------------------------------
 
 상점 - 다이어그램
 
-<img width="670" height="351" alt="Image" src="https://github.com/user-attachments/assets/6e384c2b-49fa-4a31-abb8-e769d191c212" />
+<img width="670" height="352" alt="Image" src="https://github.com/user-attachments/assets/346e3da6-bc22-4a45-b5b8-110eeeae6fca" />
 
 -----------------------------------------------------------
 

@@ -14,12 +14,39 @@ Unity를 활용하여 3D로 제작하였습니다
 
 개발기간 : 2025.08.06 ~ 2525.08.25
 
-## 2. 주요 기능
-   
+## 2. 플로우 차트 및 다이어그램
+
+2.1 플로우차트
+
+<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/9a14ff6e-ed61-493b-82e4-477dbd02be42" />
+
 -----------------------------------------------------------
+
+2.2 클래스 다이어그램
+
+플레이어 - 다이어그램
+
+<img width="715" height="473" alt="Image" src="https://github.com/user-attachments/assets/0d3e16a9-022e-40c9-95b3-16201cef23a3" />
+
+-----------------------------------------------------------
+
+게임시스템 - 다이어그램
+
+<img width="1130" height="367" alt="Image" src="https://github.com/user-attachments/assets/a1f33f05-7ca5-4592-99d5-600cf889308d" />
+
+-----------------------------------------------------------
+
+상점 - 다이어그램
+
+<img width="670" height="352" alt="Image" src="https://github.com/user-attachments/assets/346e3da6-bc22-4a45-b5b8-110eeeae6fca" />
+
+-----------------------------------------------------------
+
+## 3. 주요 기능
+   
 장우형 개발파트
 
-### 2.1 플레이어
+### 3.1 플레이어
 
 ### [Player.cs](https://github.com/jangwh/3D-Team-Project/blob/main/Assets/Scripts/Player/Player.cs)
 
@@ -81,7 +108,7 @@ GameManager는 다크링 인게임에서 플레이어 생명주기, 카메라, �
 
 * SetPlayerReferences(Player playerObj) : 플레이어-카메라-전투 시스템 간 참조 재설정
 
-### 2.2 게임시스템
+### 3.2 게임시스템
 
 ### [LoadSceneManager](Assets/Scripts/GameLoadSceneManager.cs)
 
@@ -139,7 +166,7 @@ GameManager는 다크링 인게임에서 플레이어 생명주기, 카메라, �
 
 * Use(Player player) : 소비 아이템 사용의 진입점
 
-### 2.3 상점
+### 3.3 상점
 
 ### [DragMe2](Assets/Scripts/Inventory/DragMe2.cs)
 
@@ -166,34 +193,6 @@ GameManager는 다크링 인게임에서 플레이어 생명주기, 카메라, �
 #### 📌 주요 메서드
 
 * OnDrop(PointerEventData eventData) : 드래그된 아이템의 타입을 판별, 인벤토리일시 판매, 상점일시 구매, 두 흐름을 단일 슬롯에서 처리
------------------------------------------------------------
-
-## 3. 플로우 차트 및 다이어그램
-
-3.1 플로우차트
-
-<img width="3564" height="1407" alt="Image" src="https://github.com/user-attachments/assets/9a14ff6e-ed61-493b-82e4-477dbd02be42" />
-
------------------------------------------------------------
-
-3.2 클래스 다이어그램
-
-플레이어 - 다이어그램
-
-<img width="715" height="473" alt="Image" src="https://github.com/user-attachments/assets/0d3e16a9-022e-40c9-95b3-16201cef23a3" />
-
------------------------------------------------------------
-
-게임시스템 - 다이어그램
-
-<img width="1130" height="367" alt="Image" src="https://github.com/user-attachments/assets/a1f33f05-7ca5-4592-99d5-600cf889308d" />
-
------------------------------------------------------------
-
-상점 - 다이어그램
-
-<img width="670" height="352" alt="Image" src="https://github.com/user-attachments/assets/346e3da6-bc22-4a45-b5b8-110eeeae6fca" />
-
 -----------------------------------------------------------
 
 ## 4. 기술 스택
